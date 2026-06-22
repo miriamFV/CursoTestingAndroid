@@ -8,7 +8,9 @@ import com.example.cursotestingandroid.productlist.data.local.database.MarketDat
 import com.example.cursotestingandroid.productlist.data.local.database.dao.ProductDao
 import com.example.cursotestingandroid.productlist.data.local.database.dao.PromotionDao
 import com.example.cursotestingandroid.productlist.data.repository.ProductRepositoryImpl
+import com.example.cursotestingandroid.productlist.data.repository.PromotionRepositoryImpl
 import com.example.cursotestingandroid.productlist.domain.repository.ProductRepository
+import com.example.cursotestingandroid.productlist.domain.repository.PromotionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +31,12 @@ object DataModule {
     @Singleton
     fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository {
         return productRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository {
+        return promotionRepositoryImpl
     }
 
     @Provides
