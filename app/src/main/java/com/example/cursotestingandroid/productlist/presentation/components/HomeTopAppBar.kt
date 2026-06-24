@@ -20,7 +20,7 @@ import com.example.cursotestingandroid.R
 fun HomeTopAppBar(
     filtersVisible: Boolean = true,
     onFiltersSelected: (Boolean) -> Unit,
-    onSettingsSelected: () -> Unit,
+    onSettingsSelected: () -> Unit
 ) {
     TopAppBar(
         title = {

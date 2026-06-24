@@ -9,19 +9,20 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.cursotestingandroid.productlist.presentation.ProductListScreen
+import com.example.cursotestingandroid.settings.presentation.SettingsScreen
 
 @Composable
 fun NavGraph() {
     val backStack: NavBackStack<NavKey> = rememberNavBackStack(Screen.ProductList)
     val entries = entryProvider<NavKey>{
         entry<Screen.ProductList>{
-            ProductListScreen()
+            ProductListScreen(navigateToSettings = { backStack.add(Screen.Settings) })
         }
         entry<Screen.Cart>{
             Text(text = "Cart", fontSize = 30.sp)
         }
         entry<Screen.Settings>{
-            Text(text = "Settings", fontSize = 30.sp)
+            SettingsScreen(onBack = { backStack.removeLastOrNull() })
         }
         entry<Screen.ProductDetail>{
             Text(text = "ProductDetail", fontSize = 30.sp)

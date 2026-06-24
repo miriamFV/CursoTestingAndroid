@@ -38,13 +38,13 @@ import com.example.cursotestingandroid.productlist.presentation.components.Produ
 
 @Composable
 fun ProductListScreen(
-    productListViewModel: ProductListViewModel = hiltViewModel()
+    productListViewModel: ProductListViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
 
-    val filtersVisible by productListViewModel.filtersVisible.collectAsStateWithLifecycle()
-
     val snackbarHostState = remember{ SnackbarHostState() }
+    val filterVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit){
         productListViewModel.events.collect{ event ->
@@ -59,9 +59,9 @@ fun ProductListScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                filtersVisible = filtersVisible,
+                filtersVisible = filterVisible,
                 onFiltersSelected = { showFilters -> productListViewModel.setFiltersVisible(showFilters) },
-                onSettingsSelected = { }
+                onSettingsSelected = { navigateToSettings() }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -92,7 +92,7 @@ fun ProductListScreen(
                         .padding(paddingValues = paddingValues)
                 ) {
                     AnimatedVisibility(
-                        visible = filtersVisible,
+                        visible = filterVisible,
                         enter = expandVertically() + fadeIn(),
                         exit = shrinkVertically() + fadeOut()
                     ) {
