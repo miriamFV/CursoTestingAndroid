@@ -19,9 +19,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
-    val remoteDataSource: RemoteDataSource,
-    val localDataSource: LocalDataSource,
-    val dispatchers: DispatchersProvider
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+    private val dispatchers: DispatchersProvider
 ) : ProductRepository {
 
     private val refreshScope = CoroutineScope(SupervisorJob() + dispatchers.io)
@@ -44,12 +44,24 @@ class ProductRepositoryImpl @Inject constructor(
                 }
             }
             .catch {
-                //Log importante
+                //TODO
             }
     }
 
     override fun getProductById(id: String): Flow<Product?> {
-        TODO("Not yet implemented")
+        return localDataSource.getProductById(id).map { entity ->
+            entity?.toDomainModel()
+        }.catch { e: Throwable ->
+            //TODO analityc.trackError(e)
+        }
+    }
+
+    override fun getProductsByIds(ids: Set<String>): Flow<List<Product>> {
+        return localDataSource.getProductsByIds(ids).map { entities ->
+            entities.mapNotNull { productEntity ->
+                productEntity.toDomainModel()
+            }
+        }
     }
 
     override suspend fun refreshProduct() {

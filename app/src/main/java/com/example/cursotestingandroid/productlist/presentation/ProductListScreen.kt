@@ -1,5 +1,6 @@
 package com.example.cursotestingandroid.productlist.presentation
 
+import android.R.style
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -24,25 +26,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cursotestingandroid.R
+import com.example.cursotestingandroid.cart.presentation.CartUiState
+import com.example.cursotestingandroid.cart.presentation.CartViewModel
 import com.example.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.example.cursotestingandroid.productlist.presentation.components.FiltersMenu
 import com.example.cursotestingandroid.productlist.presentation.components.HomeTopAppBar
 import com.example.cursotestingandroid.productlist.presentation.components.ProductItem
 
+
 @Composable
 fun ProductListScreen(
     productListViewModel: ProductListViewModel = hiltViewModel(),
-    navigateToSettings: () -> Unit
+    cartViewModel: CartViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit,
+    navigateToProductDetail: (String) -> Unit,
+    navigateToCart: () -> Unit
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
-
+    val cartUiState by cartViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember{ SnackbarHostState() }
     val filterVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
 
@@ -56,12 +62,23 @@ fun ProductListScreen(
         }
     }
 
+    val cartItemCount = remember(cartUiState) {
+        when (val state = cartUiState) {
+            is CartUiState.Success -> {
+                state.cartItems.sumOf { it.cartItem.quantity }
+            }
+            else -> 0
+        }
+    }
+
     Scaffold(
         topBar = {
             HomeTopAppBar(
                 filtersVisible = filterVisible,
+                cartItemCount = cartItemCount,
                 onFiltersSelected = { showFilters -> productListViewModel.setFiltersVisible(showFilters) },
-                onSettingsSelected = { navigateToSettings() }
+                onSettingsSelected = { navigateToSettings() },
+                onCartSelected = { navigateToCart() }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -76,13 +93,18 @@ fun ProductListScreen(
                     CircularProgressIndicator()
                 }
             }
-            is ProductListUiState.Error ->  {
+            is ProductListUiState.Error -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues = paddingValues),
-                    contentAlignment = Alignment.Center){
-                    Text("Error: ${state.message}", fontSize = 30.sp, color = Color.Red)
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Error: ${state.message}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
             is ProductListUiState.Success ->  {
@@ -141,7 +163,10 @@ fun ProductListScreen(
                     }else{
                         LazyColumn {
                             items(state.products) { item: ProductWithPromotion ->
-                                ProductItem(item = item, onClick = {})
+                                ProductItem(
+                                    item = item,
+                                    onClick = { navigateToProductDetail(it.product.id) }
+                                )
                             }
                         }
                     }

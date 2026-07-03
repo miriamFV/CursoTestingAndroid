@@ -5,9 +5,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.example.cursotestingandroid.cart.data.local.database.dao.CartItemDao
+import com.example.cursotestingandroid.cart.data.repository.CartRepositoryImpl
+import com.example.cursotestingandroid.cart.domain.repository.CartRepository
 import com.example.cursotestingandroid.core.data.coroutines.DefaultDispatchersProvider
 import com.example.cursotestingandroid.core.domain.coroutines.DispatchersProvider
-import com.example.cursotestingandroid.productlist.data.local.database.MarketDatabase
+import com.example.cursotestingandroid.core.data.local.database.MarketDatabase
 import com.example.cursotestingandroid.productlist.data.local.database.dao.ProductDao
 import com.example.cursotestingandroid.productlist.data.local.database.dao.PromotionDao
 import com.example.cursotestingandroid.productlist.data.repository.ProductRepositoryImpl
@@ -57,6 +60,11 @@ object DataModule {
     }
 
     @Provides
+    fun providesCartItemDao(database: MarketDatabase): CartItemDao {
+        return database.cartItemDao()
+    }
+
+    @Provides
     @Singleton
     fun providesDatabase(@ApplicationContext context: Context):MarketDatabase{
         return Room.databaseBuilder(
@@ -76,5 +84,10 @@ object DataModule {
     @Singleton
     fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
         return settingsRepositoryImpl
+    }
+    @Provides
+    @Singleton
+    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository {
+        return cartRepositoryImpl
     }
 }

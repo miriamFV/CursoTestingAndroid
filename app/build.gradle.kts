@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.core.ktx)
+    implementation(libs.androidx.material3)
     ksp(libs.hilt.compiler.ksp)
 
     //Room

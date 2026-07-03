@@ -32,13 +32,16 @@ fun FiltersMenu(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = stringResource(R.string.product_list_screen_filters_menu_title))
+            Text(text = stringResource(R.string.product_list_screen_filters_menu_title),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,7 +70,9 @@ fun FiltersMenu(
                 }
             }
             HorizontalDivider()
-            Text(text = stringResource(R.string.product_list_screen_filters_menu_sort_by))
+            Text(text = stringResource(R.string.product_list_screen_filters_menu_sort_by),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

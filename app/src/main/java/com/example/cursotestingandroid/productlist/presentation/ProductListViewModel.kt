@@ -1,5 +1,6 @@
 package com.example.cursotestingandroid.productlist.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cursotestingandroid.productlist.domain.model.ProductPromotion
@@ -49,6 +50,7 @@ class ProductListViewModel @Inject constructor(
     }
 
     private fun loadProducts() {
+        printMiriam("loadProducts()")
         _uiState.value = ProductListUiState.Loading
 
         productsJob?.cancel()
@@ -119,5 +121,9 @@ class ProductListViewModel @Inject constructor(
             is ProductPromotion.Percent -> promo.discountedPrice
             else -> item.product.price
         }
+    }
+
+    private fun printMiriam(text: String) {
+        println("🌸 Miriam - $text")
     }
 }
