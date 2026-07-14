@@ -23,17 +23,12 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addToCart(productId: String, quantity: Int) {
-        val existingItem = localDataSource.getCartItemById(productId = productId)
-        if (existingItem != null) {
+        val existingItem = localDataSource.getCartItemById(productId)
+        if(existingItem != null){
             val newQuantity = existingItem.quantity + quantity
             localDataSource.updateCartItem(existingItem.copy(quantity = newQuantity))
-        } else {
-            localDataSource.insertCartItem(
-                CartItem(
-                    productId = productId,
-                    quantity = quantity
-                ).toEntity()
-            )
+        }else{
+            localDataSource.insertCartItem(CartItem(productId, quantity).toEntity())
         }
     }
 

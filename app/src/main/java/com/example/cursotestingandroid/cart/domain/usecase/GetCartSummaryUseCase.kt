@@ -4,6 +4,7 @@ import com.example.cursotestingandroid.cart.domain.ex.activeAt
 import com.example.cursotestingandroid.cart.domain.model.CartItem
 import com.example.cursotestingandroid.cart.domain.model.CartSummary
 import com.example.cursotestingandroid.cart.domain.repository.CartRepository
+import com.example.cursotestingandroid.core.domain.util.Clock
 import com.example.cursotestingandroid.productlist.domain.model.Product
 import com.example.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.example.cursotestingandroid.productlist.domain.model.Promotion
@@ -22,7 +23,8 @@ class GetCartSummaryUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProduct: GetPromotionForProduct
+    private val getPromotionForProduct: GetPromotionForProduct,
+    private val clock: Clock
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,7 +39,7 @@ class GetCartSummaryUseCase @Inject constructor(
                         productRepository.getProductsByIds(ids),
                         promotionRepository.getActivePromotions()
                     ) { products, promotions ->
-                        calculateSummary(cartItems, products, promotions)
+                        calculateSummary(cartItems, products, promotions, clock)
                     }
                 }
             }
@@ -46,9 +48,10 @@ class GetCartSummaryUseCase @Inject constructor(
     private fun calculateSummary(
         cartItems: List<CartItem>,
         products: List<Product>,
-        promotions: List<Promotion>
+        promotions: List<Promotion>,
+        clock: Clock
     ): CartSummary {
-        val now = Instant.now()
+        val now = clock.now()
         val activePromotions = promotions.activeAt(now)
 
         val productsById = products.associateBy { it.id }
