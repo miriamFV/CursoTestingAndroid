@@ -92,7 +92,7 @@ fun CartScreen(
                         .fillMaxSize()
                         .padding(paddingValues),
                     state,
-                ) { cartViewModel.loadCart() }
+                ) { cartViewModel.refresh() }
             }
 
             is CartUiState.Success -> {

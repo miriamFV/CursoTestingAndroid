@@ -6,21 +6,16 @@ import com.example.cursotestingandroid.cart.domain.repository.CartRepository
 import com.example.cursotestingandroid.cart.domain.usecase.GetCartItemsWithPromotionsUseCase
 import com.example.cursotestingandroid.cart.domain.usecase.GetCartSummaryUseCase
 import com.example.cursotestingandroid.cart.domain.usecase.UpdateCartItemUseCase
-import com.example.cursotestingandroid.cart.presentation.model.CartItemWithPromotion
-import com.example.cursotestingandroid.productlist.domain.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,54 +23,47 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
-    private val getCartSummaryUseCase: GetCartSummaryUseCase,
+    getCartSummaryUseCase: GetCartSummaryUseCase,
     private val updateCartItemUseCase: UpdateCartItemUseCase,
-    private val getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase
+    getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<CartUiState>(CartUiState.Loading)
-    val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
+    private val refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+    val uiState: StateFlow<CartUiState> = combine(
+        refreshTrigger.onStart { emit(Unit) },
+        getCartItemsWithPromotionsUseCase(), getCartSummaryUseCase()
+    ) { _, cartItemWithPromotion, summary ->
+        CartUiState.Success(
+            summary = summary, cartItems = cartItemWithPromotion, isLoading = false
+        ) as CartUiState
+    }.catch { e ->
+        _events.emit(CartEvent.ShowMessage(e.message.orEmpty()))
+        emit(CartUiState.Error(e.message.orEmpty()))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = CartUiState.Loading
+    )
 
     private val _events = MutableSharedFlow<CartEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<CartEvent> = _events
 
-    var cartJob: Job? = null
-
-    init {
-        loadCart()
-    }
-
-    fun loadCart() {
-        _uiState.value = CartUiState.Loading
-        cartJob?.cancel()
-
-        cartJob = combine(
-            getCartItemsWithPromotionsUseCase(), getCartSummaryUseCase()
-        ) { cartItemWithPromotion, summary ->
-            _uiState.value = CartUiState.Success(
-                summary = summary, cartItems = cartItemWithPromotion, isLoading = false
-            )
-        }.catch { e ->
-            _events.emit(CartEvent.ShowMessage(e.message.orEmpty()))
-        }.launchIn(viewModelScope)
-    }
-
-    fun updateCartItem(productId: String, quantity: Int){
+    fun updateCartItem(productId: String, quantity: Int) {
         viewModelScope.launch {
-            try{
+            try {
                 updateCartItemUseCase(productId = productId, quantity = quantity)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _events.emit(CartEvent.ShowMessage(e.message.orEmpty()))
             }
         }
     }
 
-    fun removeFromCart(productId: String){
+    fun removeFromCart(productId: String) {
         viewModelScope.launch {
-            try{
+            try {
                 cartRepository.removeFromCart(productId = productId)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _events.emit(CartEvent.ShowMessage(e.message.orEmpty()))
             }
         }
@@ -91,5 +79,9 @@ class CartViewModel @Inject constructor(
         } else {
             removeFromCart(productId)
         }
+    }
+
+    fun refresh() {
+        refreshTrigger.tryEmit(Unit)
     }
 }

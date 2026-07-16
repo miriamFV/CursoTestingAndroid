@@ -44,7 +44,7 @@ class ProductDetailViewModel @Inject constructor(
                 if(e is AppError){
                     handleError(e)
                 }else{
-                    handleError(AppError.UnknownError(e.message))
+                    handleError(UnknownError(e.message))
                 }
             }
             .launchIn(viewModelScope)
@@ -57,10 +57,8 @@ class ProductDetailViewModel @Inject constructor(
                 addToCartUseCase(product)
                 _event.emit(ProductDetailEvent.SUCCESS_ADD_TO_CART)
             } catch (e: AppError) {
-                println("Miriam - AppError: ${e.message}")
                 handleError(e)
             } catch (e: Exception) {
-                println("Miriam - Exception: ${e.message}")
                 handleError(UnknownError(e.message))
             }
         }
@@ -70,7 +68,7 @@ class ProductDetailViewModel @Inject constructor(
         val newEvent = when(e){
             NetworkError -> ProductDetailEvent.NETWORK_ERROR
             is Validation.InsufficientStock -> ProductDetailEvent.INSUFFICIENT_STOCK
-            is AppError.UnknownError, DatabaseError, NotFoundError, Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
+            is UnknownError, DatabaseError, NotFoundError, Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
         }
         _event.emit(newEvent)
     }
