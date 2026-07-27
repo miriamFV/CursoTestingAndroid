@@ -13,6 +13,15 @@ android {
         version = release(36)
     }
 
+    sourceSets{
+        getByName("test"){
+            java.directories.add("src/sharedTest/java")
+        }
+        getByName("androidTest"){
+            java.directories.add("src/sharedTest/java")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.cursotestingandroid"
         minSdk = 26
@@ -20,7 +29,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.cursotestingandroid.HiltTestRunner"
     }
 
     buildTypes {
@@ -102,6 +111,12 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.kotlin.test)
+
+    testImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

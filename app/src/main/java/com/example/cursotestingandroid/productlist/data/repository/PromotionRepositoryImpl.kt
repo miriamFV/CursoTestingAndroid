@@ -38,7 +38,7 @@ class PromotionRepositoryImpl @Inject constructor(
                     try {
                         refreshPromotions()
                     } catch (e: Exception) {
-                        //TODO
+                        //TODO f
                     } finally {
                         refreshMutex.unlock()
                     }
