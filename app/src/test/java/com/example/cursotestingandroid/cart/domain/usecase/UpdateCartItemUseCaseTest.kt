@@ -1,6 +1,5 @@
 package com.example.cursotestingandroid.cart.domain.usecase
 
-import com.example.cursotestingandroid.cart.domain.model.CartItem
 import com.example.cursotestingandroid.core.builders.cartItem
 import com.example.cursotestingandroid.core.builders.product
 import com.example.cursotestingandroid.core.domain.model.AppError

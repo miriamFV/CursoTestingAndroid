@@ -14,7 +14,7 @@ import com.example.cursotestingandroid.core.domain.model.ThemeMode
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.SETTINGS_CONTENT
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.SETTINGS_IN_STOCK_SWITCH
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.SETTINGS_TAX_SWITCH
-import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_BACK
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.settingsThemeOption
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
@@ -101,7 +101,7 @@ class SettingsScreenTest {
     fun givenSettingsRendered_whenBackClicked_thenEmitBackCallback() {
         var backClicked = false
         createSettingsScreen(onBack = {backClicked = true})
-        composeRule.onNodeWithTag(TOP_APP_BAR).performClick()
+        composeRule.onNodeWithTag(TOP_APP_BAR_BACK).performClick()
         //Then
         assertTrue(backClicked)
     }

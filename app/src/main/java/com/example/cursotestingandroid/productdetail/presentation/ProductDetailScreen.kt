@@ -213,10 +213,9 @@ fun ProductDetailScreen(
                                         color = MaterialTheme.colorScheme.errorContainer
                                     ) {
                                         Text(
-                                            "PROMO: ${(promotion as ProductPromotion.BuyXPayY).label.toInt()}",
+                                            "PROMO: ${promotion.label}",
                                             modifier = Modifier.padding(
-                                                horizontal = 12.dp,
-                                                vertical = 6.dp
+                                                horizontal = 12.dp, vertical = 6.dp
                                             ),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Bold,
