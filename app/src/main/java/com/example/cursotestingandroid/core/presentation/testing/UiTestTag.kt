@@ -1,7 +1,5 @@
 package com.example.cursotestingandroid.core.presentation.testing
 
-import com.example.cursotestingandroid.productlist.domain.model.SortOption
-
 object UiTestTag {
     //TOOLBAR
     const val TOP_APP_BAR_BACK = "top_app_bar_back"
@@ -10,6 +8,7 @@ object UiTestTag {
     const val TOP_APP_BAR_SETTINGS_BUTTON = "top_app_bar_settings_button"
     const val TOP_APP_BAR_CART_BUTTON = "top_app_bar_cart_button"
     const val FILTER_VIEW = "product_list_filter"
+    const val TOP_BAR_TITLE = "top_bar_title"
 
 
     //SETTINGS
@@ -25,6 +24,17 @@ object UiTestTag {
     fun productListItem(productId: String) = "product_list_item_$productId"
     fun productListCategory(category: String?) = "product_list_category_${category ?: "all"}"
     fun productListSortOption(sortOptionName: String) = "product_list_sort_option_${sortOptionName.lowercase()}"
+
+    //PRODUCT DETAIL
+    const val PRODUCT_DETAIL_LOADING = "product_detail_loading"
+    const val PRODUCT_DETAIL_ADD_TO_CART_BUTTON = "product_detail_add_to_cart_button"
+    const val PRODUCT_DETAIL_ADD_TO_CART_BUTTON_NO_STOCK = "product_detail_add_to_cart_button_no_stock"
+    const val PRODUCT_DETAIL_STOCK_QUANTITY = "product_detail_stock_quantity"
+    const val PRODUCT_DETAIL_PERCENT_PROMOTION_STRIKETHROUGH_PRICE = "product_detail_percent_promotion_strikethrough_price"
+    const val PRODUCT_DETAIL_PERCENT_PROMOTION_LABEL = "product_detail_percent_promotion_label"
+    const val PRODUCT_DETAIL_BUYXPAYY_PROMOTION_LABEL = "product_detail_buy_x_pay_y_promotion_label"
+    const val PRODUCT_DETAIL_PRODUCT_NAME = "product_detail_product_name"
+    const val PRODUCT_DETAIL_PRODUCT_CATEGORY = "product_detail_product_category"
 
     //CART SCREEN
     const val CART_LOADING = "cart_loading"

@@ -29,6 +29,8 @@
     <string name="product_detail_screen_add_to_cart_button_with_stock">Agregar al carrito</string>
     <string name="product_detail_screen_add_to_cart_button_no_stock">Sin stock disponible</string>
     <string name="product_detail_screen_insufficient_stock_error">No hay suficiente stock</string>
+    <string name="product_detail_screen_percent_off">%1$d%% OFF</string>
+    <string name="product_detail_screen_buy_x_pay_y_promotion">PROMO: %1$s</string>
 
     <!-- CartScreen -->
     <string name="cart_screen_top_app_bar_title">Carrito</string>
