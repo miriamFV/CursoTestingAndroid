@@ -25,4 +25,13 @@ object UiTestTag {
     fun productListItem(productId: String) = "product_list_item_$productId"
     fun productListCategory(category: String?) = "product_list_category_${category ?: "all"}"
     fun productListSortOption(sortOptionName: String) = "product_list_sort_option_${sortOptionName.lowercase()}"
+
+    //CART SCREEN
+    const val CART_LOADING = "cart_loading"
+    const val CART_ERROR_MESSAGE = "cart_error_message"
+    const val CART_RETRY_BUTTON = "cart_retry_button"
+    const val CART_EMPTY_VIEW= "cart_empty_view"
+    fun cartItem(productId: String) = "cart_item_$productId"
+    fun cartQuantityIncrease(productId: String) = "cart_quantity_increase_$productId"
+    fun cartQuantityDecrease(productId: String) = "cart_quantity_decrease_$productId"
 }

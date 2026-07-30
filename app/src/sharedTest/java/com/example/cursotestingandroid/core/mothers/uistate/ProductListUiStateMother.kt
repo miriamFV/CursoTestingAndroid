@@ -1,6 +1,7 @@
-package com.example.cursotestingandroid.core.mothers
+package com.example.cursotestingandroid.core.mothers.uistate
 
-import com.example.cursotestingandroid.core.builders.product
+import com.example.cursotestingandroid.core.mothers.ProductMother
+import com.example.cursotestingandroid.core.mothers.PromotionMother
 import com.example.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.example.cursotestingandroid.productlist.domain.model.SortOption
 import com.example.cursotestingandroid.productlist.presentation.ProductListUiState

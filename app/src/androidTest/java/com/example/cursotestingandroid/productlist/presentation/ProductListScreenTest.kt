@@ -1,26 +1,19 @@
 package com.example.cursotestingandroid.productlist.presentation
 
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
-import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToIndex
-import androidx.compose.ui.test.performScrollToNode
 import com.example.cursotestingandroid.R
-import com.example.cursotestingandroid.core.mothers.ProductListUiStateMother
 import com.example.cursotestingandroid.core.mothers.ProductMother.bread
 import com.example.cursotestingandroid.core.mothers.ProductMother.coffee
 import com.example.cursotestingandroid.core.mothers.ProductMother.milk
-import com.example.cursotestingandroid.core.presentation.testing.UiTestTag
+import com.example.cursotestingandroid.core.mothers.uistate.ProductListUiStateMother
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.FILTER_VIEW
-import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_LIST_LIST
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_LIST_LOADING
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_BADGE
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_CART_BUTTON

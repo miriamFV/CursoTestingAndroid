@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -27,7 +28,9 @@ fun QuantitySelector(
     canDecrease: Boolean,
     canIncrease: Boolean,
     onDecreaseSelected: () -> Unit,
-    onIncreaseSelected: () -> Unit
+    onIncreaseSelected: () -> Unit,
+    increaseTestTag: String? = null,
+    decreaseTestTag: String? = null
 ) {
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -36,7 +39,9 @@ fun QuantitySelector(
 
         IconButton(
             onClick = { onDecreaseSelected() },
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier
+                .size(36.dp)
+                .then(decreaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
             enabled = canDecrease
         ) {
             Icon(Icons.Default.Remove, contentDescription = null, modifier.size(20.dp))
@@ -56,7 +61,9 @@ fun QuantitySelector(
         }
         IconButton(
             onClick = { onIncreaseSelected() },
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier
+                .size(36.dp)
+                .then(increaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
             enabled = canIncrease
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier.size(20.dp))
