@@ -17,6 +17,7 @@
     <string name="product_list_screen_top_app_bar_show_filters">Mostrar filtros</string>
     <string name="product_list_screen_top_app_bar_settings">Ajustes</string>
     <string name="product_list_screen_top_app_bar_cart">Carrito</string>
+    <string name="product_list_screen_top_app_bar_cart_max_count">99+</string>
 
     <!-- ProductDetailScreen -->
     <string name="product_detail_screen_available_stock">Stock disponible</string>
@@ -28,6 +29,8 @@
     <string name="product_detail_screen_add_to_cart_button_with_stock">Agregar al carrito</string>
     <string name="product_detail_screen_add_to_cart_button_no_stock">Sin stock disponible</string>
     <string name="product_detail_screen_insufficient_stock_error">No hay suficiente stock</string>
+    <string name="product_detail_screen_percent_off">%1$d%% OFF</string>
+    <string name="product_detail_screen_buy_x_pay_y_promotion">PROMO: %1$s</string>
 
     <!-- CartScreen -->
     <string name="cart_screen_top_app_bar_title">Carrito</string>
@@ -40,5 +43,19 @@
     <string name="cart_screen_total_amount">Total: %1$s</string>
     <string name="cart_screen_empty_cart">Tu carrito está vacio</string>
     <string name="cart_screen_add_products_to_start">Agrega productos para comenzar</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings_screen_top_app_bar_title">Ajustes</string>
+    <string name="settings_screen_filters_and_visualization">Filtros y visualización</string>
+    <string name="settings_screen_only_in_stock_products">Solo productos en Stock</string>
+    <string name="settings_screen_only_in_stock_products_description">Muestra únicamente productos disponibles</string>
+    <string name="settings_screen_show_taxes_included">Mostrar impuestos incluídos</string>
+    <string name="settings_screen_show_taxes_included_description">Incluir impuestos de los precios mostrados</string>
+    <string name="settings_screen_appearance">Apariencia</string>
+    <string name="settings_screen_app_theme">Tema de la aplicación</string>
+    <string name="settings_screen_app_theme_description">Elige entre modo claro, oscuro o seguir el sistema</string>
+    <string name="settings_screen_theme_system">Sistema</string>
+    <string name="settings_screen_theme_light">Claro</string>
+    <string name="settings_screen_theme_dark">Oscuro</string>
 
 </resources>

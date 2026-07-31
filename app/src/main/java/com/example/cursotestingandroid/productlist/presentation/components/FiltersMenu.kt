@@ -15,9 +15,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cursotestingandroid.R
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.FILTER_VIEW
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.productListCategory
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.productListSortOption
 import com.example.cursotestingandroid.productlist.domain.model.SortOption
 import com.example.cursotestingandroid.productlist.presentation.ProductListUiState
 
@@ -31,6 +35,7 @@ fun FiltersMenu(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .testTag(FILTER_VIEW)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
@@ -49,6 +54,7 @@ fun FiltersMenu(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 FilterChip(
+                    modifier = Modifier.testTag(productListCategory(null)),
                     selected = state.selectedCategory == null,
                     onClick = { onCategorySelected(null) },
                     label = {
@@ -61,6 +67,7 @@ fun FiltersMenu(
                 )
                 state.categories.forEach { category ->
                     FilterChip(
+                        modifier = Modifier.testTag(productListCategory(category)),
                         selected = category.equals(state.selectedCategory, ignoreCase = true),
                         onClick = { onCategorySelected(category) },
                         label = {
@@ -87,7 +94,7 @@ fun FiltersMenu(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).testTag(productListSortOption(SortOption.PRICE_ASC.name))
                 )
                 FilterChip(
                     selected = state.sortOption == SortOption.PRICE_DESC,
@@ -98,7 +105,7 @@ fun FiltersMenu(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).testTag(productListSortOption(SortOption.PRICE_DESC.name))
                 )
                 FilterChip(
                     selected = state.sortOption == SortOption.DISCOUNT,
@@ -109,7 +116,7 @@ fun FiltersMenu(
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).testTag(productListSortOption(SortOption.DISCOUNT.name))
                 )
             }
         }

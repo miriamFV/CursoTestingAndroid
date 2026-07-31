@@ -16,11 +16,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import com.example.cursotestingandroid.R
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_BADGE
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_CART_BUTTON
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_FILTERS_BUTTON
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_APP_BAR_SETTINGS_BUTTON
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +49,9 @@ fun HomeTopAppBar(
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         actions = {
-            IconButton(onClick = { onFiltersSelected(!filtersVisible) }) {
+            IconButton(
+                modifier = Modifier.testTag(TOP_APP_BAR_FILTERS_BUTTON),
+                onClick = { onFiltersSelected(!filtersVisible) }) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
                     contentDescription = if (filtersVisible) {
@@ -55,7 +62,10 @@ fun HomeTopAppBar(
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            IconButton(onClick = { onSettingsSelected() }) {
+            IconButton(
+                modifier = Modifier.testTag(TOP_APP_BAR_SETTINGS_BUTTON),
+                onClick = { onSettingsSelected() }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = stringResource(R.string.product_list_screen_top_app_bar_settings),
@@ -64,16 +74,22 @@ fun HomeTopAppBar(
             }
             BadgedBox(modifier = Modifier.padding(end = 4.dp), badge = {
                 if (cartItemCount > 0) {
-                    Badge {
+                    Badge(modifier = Modifier.testTag(TOP_APP_BAR_BADGE)) {
                         Text(
-                            if (cartItemCount > 99) "99+" else cartItemCount.toString(),
+                            text = if (cartItemCount > 99) {
+                                stringResource(R.string.product_list_screen_top_app_bar_cart_max_count)
+                            } else {
+                                cartItemCount.toString()
+                            },
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = Bold
                         )
                     }
                 }
             }) {
-                IconButton(onClick = { onCartSelected() }) {
+                IconButton(
+                    modifier = Modifier.testTag(TOP_APP_BAR_CART_BUTTON),
+                    onClick = { onCartSelected() }) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = stringResource(R.string.product_list_screen_top_app_bar_cart),

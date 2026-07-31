@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -54,6 +55,13 @@ import com.example.cursotestingandroid.cart.domain.model.CartSummary
 import com.example.cursotestingandroid.cart.presentation.model.CartItemWithPromotion
 import com.example.cursotestingandroid.core.presentation.components.MarketTopAppBar
 import com.example.cursotestingandroid.core.presentation.components.QuantitySelector
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.CART_EMPTY_VIEW
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.CART_ERROR_MESSAGE
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.CART_LOADING
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.CART_RETRY_BUTTON
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.cartItem
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.cartQuantityDecrease
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.cartQuantityIncrease
 import com.example.cursotestingandroid.productlist.domain.model.ProductPromotion
 import java.text.NumberFormat
 import java.util.Currency.getInstance
@@ -74,10 +82,33 @@ fun CartScreen(
         }
     }
 
+    CartScreenContent(
+        uiState = uiState,
+        snackbarHostState = snackbarHostState,
+        onBack = onBack,
+        onIncreaseQuantity = { productId, quantity -> cartViewModel.increaseQuantity(productId, quantity)},
+        onDecreaseQuantity = { productId, quantity -> cartViewModel.decreaseQuantity(productId, quantity)},
+        onRefresh = { cartViewModel.refresh() },
+        onRemoveFromCart = { id -> cartViewModel.removeFromCart(id) }
+    )
+
+
+}
+
+@Composable
+fun CartScreenContent(
+    uiState: CartUiState,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    onBack: () -> Unit,
+    onIncreaseQuantity: (String, Int) -> Unit,
+    onDecreaseQuantity: (String, Int) -> Unit,
+    onRefresh: () -> Unit,
+    onRemoveFromCart: (String) -> Unit
+){
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = { MarketTopAppBar(title = stringResource(R.string.cart_screen_top_app_bar_title)) { onBack() } }) { paddingValues ->
-        when (val state = uiState) {
+        when (uiState) {
             CartUiState.Loading -> {
                 CartLoadingStateScreen(
                     Modifier
@@ -88,11 +119,12 @@ fun CartScreen(
 
             is CartUiState.Error -> {
                 CartErrorStateScreen(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    state,
-                ) { cartViewModel.refresh() }
+                    state = uiState,
+                    onRetrySelected = onRefresh
+                )
             }
 
             is CartUiState.Success -> {
@@ -100,14 +132,14 @@ fun CartScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    state = state,
+                    state = uiState,
                     onIncreaseQuantity = { productId, quantity ->
-                        cartViewModel.increaseQuantity(productId, quantity)
+                        onIncreaseQuantity(productId, quantity)
                     },
                     onDecreaseQuantity = { productId, quantity ->
-                        cartViewModel.decreaseQuantity(productId, quantity)
+                        onDecreaseQuantity(productId, quantity)
                     },
-                    onRemove = { id -> cartViewModel.removeFromCart(id) })
+                    onRemove = onRemoveFromCart )
             }
         }
     }
@@ -123,12 +155,15 @@ fun CartErrorStateScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
+            modifier = Modifier.testTag(CART_ERROR_MESSAGE),
             text = stringResource(R.string.cart_screen_error_with_message, state.message),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error
         )
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { onRetrySelected() }) {
+        Button(
+            modifier = Modifier.testTag(CART_RETRY_BUTTON),
+            onClick = { onRetrySelected() }) {
             Text(text = stringResource(R.string.cart_screen_retry))
         }
     }
@@ -137,7 +172,7 @@ fun CartErrorStateScreen(
 @Composable
 fun CartLoadingStateScreen(modifier: Modifier = Modifier) {
     Box(modifier, contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+        CircularProgressIndicator( modifier = Modifier.testTag(CART_LOADING))
     }
 }
 
@@ -162,7 +197,7 @@ fun CartSuccessStateScreen(
         ) { isEmpty ->
             if (isEmpty) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().testTag(CART_EMPTY_VIEW),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -334,7 +369,7 @@ fun CartItemCard(
     }
 
     SwipeToDismissBox(
-        modifier = modifier,
+        modifier = modifier.testTag(cartItem(product.id)),
         state = dismissState,
         enableDismissFromEndToStart = false,
         backgroundContent = {
@@ -429,6 +464,8 @@ fun CartItemCard(
                         canIncrease = cartItem.quantity < product.stock,
                         onDecreaseSelected = { onDecreaseQuantity(product.id, cartItem.quantity) },
                         onIncreaseSelected = { onIncreaseQuantity(product.id, cartItem.quantity) },
+                        increaseTestTag = cartQuantityIncrease(product.id),
+                        decreaseTestTag = cartQuantityDecrease(product.id)
                     )
                 }
             }
