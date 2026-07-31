@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class CartItemEntity(
     @PrimaryKey
     val productId: String,
-    val quantity: Int
+    val quantity: Int,
 )

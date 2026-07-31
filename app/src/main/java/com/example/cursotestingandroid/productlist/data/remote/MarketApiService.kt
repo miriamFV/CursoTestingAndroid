@@ -5,7 +5,6 @@ import com.example.cursotestingandroid.productlist.data.remote.response.Promotio
 import retrofit2.http.GET
 
 interface MarketApiService {
-
     @GET("data/products.json")
     suspend fun getProducts(): ProductsResponse
 

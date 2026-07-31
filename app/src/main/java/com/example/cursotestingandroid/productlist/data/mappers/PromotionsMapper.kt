@@ -10,14 +10,14 @@ import kotlinx.serialization.json.Json
 import java.time.Instant
 
 fun PromotionResponse.toEntity(json: Json): PromotionEntity? {
-
-    if(startAtEpoch == null || endAtEpoch == null) return null
+    if (startAtEpoch == null || endAtEpoch == null) return null
 
     val productIds: List<String> = listOf(productId)
-    val productIdsJson = json.encodeToString(
-        serializer = ListSerializer(String.serializer()),
-        value = productIds
-    )
+    val productIdsJson =
+        json.encodeToString(
+            serializer = ListSerializer(String.serializer()),
+            value = productIds,
+        )
 
     return PromotionEntity(
         id = id,
@@ -27,27 +27,28 @@ fun PromotionResponse.toEntity(json: Json): PromotionEntity? {
         buyX = buyX,
         payY = payY,
         startAtEpoch = startAtEpoch,
-        endAtEpoch = endAtEpoch
+        endAtEpoch = endAtEpoch,
     )
 }
 
 fun PromotionEntity.toDomainModel(json: Json): Promotion? {
-
-    val decodedProductIds: List<String>? = runCatching {
-        json.decodeFromString(
-            deserializer = ListSerializer(String.serializer()),
-            string = productIds
-        )
-    }.getOrNull()
+    val decodedProductIds: List<String>? =
+        runCatching {
+            json.decodeFromString(
+                deserializer = ListSerializer(String.serializer()),
+                string = productIds,
+            )
+        }.getOrNull()
 
     val finalType = runCatching { PromotionType.valueOf(type.trim().uppercase()) }.getOrNull()
 
-    if(finalType == null || decodedProductIds == null) return null
+    if (finalType == null || decodedProductIds == null) return null
 
-    val finalOfferValue = when(finalType){
-        PromotionType.PERCENT -> percent
-        PromotionType.BUY_X_PAY_Y -> payY
-    }?.toDouble()
+    val finalOfferValue =
+        when (finalType) {
+            PromotionType.PERCENT -> percent
+            PromotionType.BUY_X_PAY_Y -> payY
+        }?.toDouble()
 
     finalOfferValue ?: return null
 
@@ -58,6 +59,6 @@ fun PromotionEntity.toDomainModel(json: Json): Promotion? {
         value = finalOfferValue,
         buyQuantity = buyX,
         startTime = Instant.ofEpochSecond(startAtEpoch),
-        endTime = Instant.ofEpochSecond(endAtEpoch)
+        endTime = Instant.ofEpochSecond(endAtEpoch),
     )
 }

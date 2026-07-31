@@ -31,75 +31,58 @@ import javax.inject.Singleton
 
 private val Context.testingDataStore: DataStore<Preferences> by preferencesDataStore("testing_settings")
 
-
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataModule::class]
+    replaces = [DataModule::class],
 )
 object TestDataModule {
+    @Provides
+    @Singleton
+    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider =
+        defaultDispatchersProvider
 
     @Provides
     @Singleton
-    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider{
-        return defaultDispatchersProvider
-    }
+    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository =
+        productRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository {
-        return productRepositoryImpl
-    }
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository =
+        promotionRepositoryImpl
+
+    @Provides
+    fun providesProductDao(database: MarketDatabase): ProductDao = database.productDao()
+
+    @Provides
+    fun providesPromotionDao(database: MarketDatabase): PromotionDao = database.promotionDao()
+
+    @Provides
+    fun providesCartItemDao(database: MarketDatabase): CartItemDao = database.cartItemDao()
 
     @Provides
     @Singleton
-    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository {
-        return promotionRepositoryImpl
-    }
-
-    @Provides
-    fun providesProductDao(database: MarketDatabase): ProductDao {
-        return database.productDao()
-    }
-
-    @Provides
-    fun providesPromotionDao(database: MarketDatabase): PromotionDao {
-        return database.promotionDao()
-    }
-
-    @Provides
-    fun providesCartItemDao(database: MarketDatabase): CartItemDao {
-        return database.cartItemDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesDatabase():MarketDatabase{
+    fun providesDatabase(): MarketDatabase {
         val context = ApplicationProvider.getApplicationContext<Context>()
         return Room.inMemoryDatabaseBuilder(context, MarketDatabase::class.java).build()
     }
 
     @Provides
     @Singleton
-    fun provideDataStore(): DataStore<Preferences>{
-        return ApplicationProvider.getApplicationContext<Context>().testingDataStore
-    }
+    fun provideDataStore(): DataStore<Preferences> =
+        ApplicationProvider.getApplicationContext<Context>().testingDataStore
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
-        return settingsRepositoryImpl
-    }
-    @Provides
-    @Singleton
-    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository {
-        return cartRepositoryImpl
-    }
+    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository =
+        settingsRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideClock(systemClock: SystemClock): Clock {
-        return systemClock
-    }
+    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository = cartRepositoryImpl
 
+    @Provides
+    @Singleton
+    fun provideClock(systemClock: SystemClock): Clock = systemClock
 }

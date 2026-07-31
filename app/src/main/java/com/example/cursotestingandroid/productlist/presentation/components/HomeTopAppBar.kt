@@ -41,62 +41,67 @@ fun HomeTopAppBar(
             Text(
                 text = stringResource(R.string.product_list_screen_top_app_bar_title),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
         actions = {
             IconButton(
                 modifier = Modifier.testTag(TOP_APP_BAR_FILTERS_BUTTON),
-                onClick = { onFiltersSelected(!filtersVisible) }) {
+                onClick = { onFiltersSelected(!filtersVisible) },
+            ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
-                    contentDescription = if (filtersVisible) {
-                        stringResource(R.string.product_list_screen_top_app_bar_hide_filters)
-                    } else {
-                        stringResource(R.string.product_list_screen_top_app_bar_show_filters)
-                    },
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    contentDescription =
+                        if (filtersVisible) {
+                            stringResource(R.string.product_list_screen_top_app_bar_hide_filters)
+                        } else {
+                            stringResource(R.string.product_list_screen_top_app_bar_show_filters)
+                        },
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
             IconButton(
                 modifier = Modifier.testTag(TOP_APP_BAR_SETTINGS_BUTTON),
-                onClick = { onSettingsSelected() }
+                onClick = { onSettingsSelected() },
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = stringResource(R.string.product_list_screen_top_app_bar_settings),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
             BadgedBox(modifier = Modifier.padding(end = 4.dp), badge = {
                 if (cartItemCount > 0) {
                     Badge(modifier = Modifier.testTag(TOP_APP_BAR_BADGE)) {
                         Text(
-                            text = if (cartItemCount > 99) {
-                                stringResource(R.string.product_list_screen_top_app_bar_cart_max_count)
-                            } else {
-                                cartItemCount.toString()
-                            },
+                            text =
+                                if (cartItemCount > 99) {
+                                    stringResource(R.string.product_list_screen_top_app_bar_cart_max_count)
+                                } else {
+                                    cartItemCount.toString()
+                                },
                             style = MaterialTheme.typography.labelSmall,
-                            fontWeight = Bold
+                            fontWeight = Bold,
                         )
                     }
                 }
             }) {
                 IconButton(
                     modifier = Modifier.testTag(TOP_APP_BAR_CART_BUTTON),
-                    onClick = { onCartSelected() }) {
+                    onClick = { onCartSelected() },
+                ) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = stringResource(R.string.product_list_screen_top_app_bar_cart),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
             }
-        }
+        },
     )
 }

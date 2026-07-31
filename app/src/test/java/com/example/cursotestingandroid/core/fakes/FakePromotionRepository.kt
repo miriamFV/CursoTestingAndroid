@@ -6,17 +6,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class FakePromotionRepository: PromotionRepository {
+class FakePromotionRepository : PromotionRepository {
+    private val promotions = MutableStateFlow<List<Promotion>>(emptyList())
 
-    private val _promotions = MutableStateFlow<List<Promotion>>(emptyList())
-
-    fun setPromotions(promotions: List<Promotion>){
-        _promotions.value = promotions
+    fun setPromotions(promotions: List<Promotion>) {
+        this.promotions.value = promotions
     }
 
-    override fun getActivePromotions(): Flow<List<Promotion>> {
-        return _promotions.asStateFlow()
-    }
+    override fun getActivePromotions(): Flow<List<Promotion>> = promotions.asStateFlow()
 
     override suspend fun refreshPromotions() {}
 }

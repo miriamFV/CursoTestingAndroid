@@ -13,30 +13,32 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
-): ViewModel() {
+class SettingsViewModel
+    @Inject
+    constructor(
+        private val settingsRepository: SettingsRepository,
+    ) : ViewModel() {
+        val uiState: StateFlow<SettingsUiState> =
+            combine(
+                settingsRepository.inStockOnly,
+                settingsRepository.themeMode,
+            ) { inStockOnly, themeMode ->
+                SettingsUiState(inStockOnly, themeMode)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = SettingsUiState(),
+            )
 
-    val uiState: StateFlow<SettingsUiState> = combine(
-        settingsRepository.inStockOnly, settingsRepository.themeMode
-    ) { inStockOnly, themeMode ->
-        SettingsUiState(inStockOnly, themeMode)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = SettingsUiState()
-    )
+        fun setInStockOnly(inStockOnly: Boolean) {
+            viewModelScope.launch {
+                settingsRepository.setInStockOnly(inStockOnly)
+            }
+        }
 
-    fun setInStockOnly(inStockOnly: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setInStockOnly(inStockOnly)
+        fun setThemeMode(themeMode: ThemeMode) {
+            viewModelScope.launch {
+                settingsRepository.setThemeMode(themeMode)
+            }
         }
     }
-
-    fun setThemeMode(themeMode: ThemeMode) {
-        viewModelScope.launch {
-            settingsRepository.setThemeMode(themeMode)
-        }
-    }
-
-}

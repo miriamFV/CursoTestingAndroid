@@ -22,22 +22,21 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class SettingsScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     private fun createSettingsScreen(
         uiState: SettingsUiState = SettingsUiState(),
-        onBack:() -> Unit = {},
-        onInStockOnlyChange:(Boolean) -> Unit = {},
-        onThemeModeSelected:(ThemeMode) -> Unit = {}
-    ){
+        onBack: () -> Unit = {},
+        onInStockOnlyChange: (Boolean) -> Unit = {},
+        onThemeModeSelected: (ThemeMode) -> Unit = {},
+    ) {
         composeRule.setContent {
             SettingsContent(
                 uiState = uiState,
                 onBack = onBack,
                 onInStockOnlyChange = onInStockOnlyChange,
-                onThemeModeSelected = onThemeModeSelected
+                onThemeModeSelected = onThemeModeSelected,
             )
         }
     }
@@ -45,21 +44,21 @@ class SettingsScreenTest {
     private fun getString(resId: Int): String = composeRule.activity.getString(resId)
 
     @Test
-    fun givenDefaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSections(){
+    fun givenDefaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSections() {
         createSettingsScreen(uiState = SettingsUiState())
 
-        val SettingsTitleText = getString(R.string.settings_screen_top_app_bar_title)
-        val FiltersSectionTitleText = getString(R.string.settings_screen_filters_and_visualization)
+        val settingsTitleText = getString(R.string.settings_screen_top_app_bar_title)
+        val filtersSectionTitleText = getString(R.string.settings_screen_filters_and_visualization)
         val inStockText = getString(R.string.settings_screen_only_in_stock_products)
         val inTaxesText = getString(R.string.settings_screen_show_taxes_included)
-        val AppearanceSectionTitleText = getString(R.string.settings_screen_appearance)
+        val appearanceSectionTitleText = getString(R.string.settings_screen_appearance)
         val themeText = getString(R.string.settings_screen_app_theme)
 
-        composeRule.onNodeWithText(SettingsTitleText).assertIsDisplayed()
-        composeRule.onNodeWithText(FiltersSectionTitleText).assertIsDisplayed()
+        composeRule.onNodeWithText(settingsTitleText).assertIsDisplayed()
+        composeRule.onNodeWithText(filtersSectionTitleText).assertIsDisplayed()
         composeRule.onNodeWithText(inStockText).assertIsDisplayed()
         composeRule.onNodeWithText(inTaxesText).assertIsDisplayed()
-        composeRule.onNodeWithText(AppearanceSectionTitleText).assertIsDisplayed()
+        composeRule.onNodeWithText(appearanceSectionTitleText).assertIsDisplayed()
         composeRule.onNodeWithText(themeText).assertIsDisplayed()
 
         composeRule.onNodeWithTag(SETTINGS_CONTENT).assertIsDisplayed()
@@ -100,9 +99,9 @@ class SettingsScreenTest {
     @Test
     fun givenSettingsRendered_whenBackClicked_thenEmitBackCallback() {
         var backClicked = false
-        createSettingsScreen(onBack = {backClicked = true})
+        createSettingsScreen(onBack = { backClicked = true })
         composeRule.onNodeWithTag(TOP_APP_BAR_BACK).performClick()
-        //Then
+        // Then
         assertTrue(backClicked)
     }
 
@@ -111,9 +110,10 @@ class SettingsScreenTest {
         var emitted: Boolean? = null
         createSettingsScreen(
             uiState = SettingsUiState(inStockOnly = false),
-            onInStockOnlyChange = { newState -> emitted = newState })
+            onInStockOnlyChange = { newState -> emitted = newState },
+        )
         composeRule.onNodeWithTag(SETTINGS_IN_STOCK_SWITCH).performClick()
-        //Then
+        // Then
         assertEquals(true, emitted)
     }
 
@@ -122,9 +122,10 @@ class SettingsScreenTest {
         var selectedTheme: ThemeMode? = null
         createSettingsScreen(
             uiState = SettingsUiState(themeMode = ThemeMode.LIGHT),
-            onThemeModeSelected = { themeMode -> selectedTheme = themeMode })
+            onThemeModeSelected = { themeMode -> selectedTheme = themeMode },
+        )
         composeRule.onNodeWithTag(settingsThemeOption("DARK")).performClick()
-        //Then
+        // Then
         assertEquals(ThemeMode.DARK, selectedTheme)
     }
 }

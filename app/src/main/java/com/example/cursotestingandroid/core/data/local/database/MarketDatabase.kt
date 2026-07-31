@@ -12,10 +12,12 @@ import com.example.cursotestingandroid.productlist.data.local.database.entity.Pr
 @Database(
     entities = [ProductEntity::class, PromotionEntity::class, CartItemEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = true,
 )
-abstract class MarketDatabase: RoomDatabase() {
+abstract class MarketDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+
     abstract fun promotionDao(): PromotionDao
+
     abstract fun cartItemDao(): CartItemDao
 }

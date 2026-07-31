@@ -47,7 +47,7 @@ import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.setti
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit = {},
-    settingsViewModel: SettingsViewModel = hiltViewModel()
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
     SettingsContent(
@@ -58,79 +58,81 @@ fun SettingsScreen(
         },
         onThemeModeSelected = { newThemeMode ->
             settingsViewModel.setThemeMode(newThemeMode)
-        }
+        },
     )
 }
-
 
 @Composable
 fun SettingsContent(
     uiState: SettingsUiState,
     onBack: () -> Unit,
     onInStockOnlyChange: (Boolean) -> Unit,
-    onThemeModeSelected: (ThemeMode) -> Unit
+    onThemeModeSelected: (ThemeMode) -> Unit,
 ) {
     Scaffold(
         topBar = {
             MarketTopAppBar(
                 title = stringResource(R.string.settings_screen_top_app_bar_title),
-                onBackSelected = { onBack() })
-        }) { paddingValues ->
+                onBackSelected = { onBack() },
+            )
+        },
+    ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag(SETTINGS_CONTENT)
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .testTag(SETTINGS_CONTENT)
+                    .padding(paddingValues)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
             ) {
                 Column(
-                    Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
+                    Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Icon(
                             Icons.Default.Info,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
 
                         Text(
                             text = stringResource(R.string.settings_screen_filters_and_visualization),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
-
                     }
                     HorizontalDivider()
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
                                 text = stringResource(R.string.settings_screen_only_in_stock_products),
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                             Text(
                                 text = stringResource(R.string.settings_screen_only_in_stock_products_description),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
 
@@ -139,7 +141,7 @@ fun SettingsContent(
                             checked = uiState.inStockOnly,
                             onCheckedChange = { newState ->
                                 onInStockOnlyChange(newState)
-                            }
+                            },
                         )
                     }
 
@@ -148,27 +150,27 @@ fun SettingsContent(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
                                 text = stringResource(R.string.settings_screen_show_taxes_included),
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                             Text(
                                 text = stringResource(R.string.settings_screen_show_taxes_included_description),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
 
                         Switch(
                             modifier = Modifier.testTag(SETTINGS_TAX_SWITCH),
                             checked = true,
-                            onCheckedChange = {}
+                            onCheckedChange = {},
                         )
                     }
                 }
@@ -178,74 +180,72 @@ fun SettingsContent(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
             ) {
                 Column(
-                    Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
+                    Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Icon(
                             Icons.Default.DarkMode,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
 
                         Text(
                             text = stringResource(R.string.settings_screen_appearance),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
-
                     }
                     HorizontalDivider()
 
-
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.settings_screen_app_theme),
                             style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         )
                         Text(
                             text = stringResource(R.string.settings_screen_app_theme_description),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Spacer(Modifier.height(4.dp))
                         SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             SegmentedButton(
                                 modifier = Modifier.testTag(settingsThemeOption("SYSTEM")),
                                 shape = SegmentedButtonDefaults.itemShape(0, 3),
                                 onClick = { onThemeModeSelected(ThemeMode.SYSTEM) },
                                 selected = uiState.themeMode == ThemeMode.SYSTEM,
-                                label = { Text(stringResource(R.string.settings_screen_theme_system)) }
+                                label = { Text(stringResource(R.string.settings_screen_theme_system)) },
                             )
                             SegmentedButton(
                                 modifier = Modifier.testTag(settingsThemeOption("LIGHT")),
                                 shape = SegmentedButtonDefaults.itemShape(1, 3),
                                 onClick = { onThemeModeSelected(ThemeMode.LIGHT) },
                                 selected = uiState.themeMode == ThemeMode.LIGHT,
-                                label = { Text(stringResource(R.string.settings_screen_theme_light)) }
+                                label = { Text(stringResource(R.string.settings_screen_theme_light)) },
                             )
                             SegmentedButton(
                                 modifier = Modifier.testTag(settingsThemeOption("DARK")),
                                 shape = SegmentedButtonDefaults.itemShape(2, 3),
                                 onClick = { onThemeModeSelected(ThemeMode.DARK) },
                                 selected = uiState.themeMode == ThemeMode.DARK,
-                                label = { Text(stringResource(R.string.settings_screen_theme_dark)) }
+                                label = { Text(stringResource(R.string.settings_screen_theme_dark)) },
                             )
                         }
                     }
-
                 }
             }
         }
@@ -259,6 +259,6 @@ fun SettingContentPreview() {
         uiState = SettingsUiState(),
         onBack = {},
         onInStockOnlyChange = {},
-        onThemeModeSelected = {}
+        onThemeModeSelected = {},
     )
 }
