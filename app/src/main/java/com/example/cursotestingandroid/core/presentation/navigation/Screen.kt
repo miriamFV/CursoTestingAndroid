@@ -18,4 +18,7 @@ sealed interface Screen : NavKey {
     data class ProductDetail(
         val productId: String,
     ) : Screen
+
+    @Serializable
+    data object Checkout : Screen
 }

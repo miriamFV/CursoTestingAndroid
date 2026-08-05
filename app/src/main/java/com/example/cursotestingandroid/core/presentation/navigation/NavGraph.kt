@@ -7,6 +7,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.cursotestingandroid.cart.presentation.CartScreen
+import com.example.cursotestingandroid.checkout.presentation.CheckoutScreen
 import com.example.cursotestingandroid.productdetail.presentation.ProductDetailScreen
 import com.example.cursotestingandroid.productlist.presentation.ProductListScreen
 import com.example.cursotestingandroid.settings.presentation.SettingsScreen
@@ -32,7 +33,9 @@ fun NavGraph() {
                 )
             }
             entry<Screen.Cart> {
-                CartScreen(onBack = { backStack.removeLastOrNull() })
+                CartScreen(
+                    onBack = { backStack.removeLastOrNull() },
+                    navigateToCheckout = { backStack.add(Screen.Checkout) })
             }
             entry<Screen.Settings> {
                 SettingsScreen(onBack = { backStack.removeLastOrNull() })
@@ -42,6 +45,9 @@ fun NavGraph() {
                     productId = route.productId,
                     onBack = { backStack.removeLastOrNull() },
                 )
+            }
+            entry<Screen.Checkout> {
+                CheckoutScreen(onBack = { backStack.removeLastOrNull() })
             }
         }
 

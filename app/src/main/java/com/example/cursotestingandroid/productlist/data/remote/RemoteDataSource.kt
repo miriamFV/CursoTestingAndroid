@@ -1,5 +1,6 @@
 package com.example.cursotestingandroid.productlist.data.remote
 
+import com.example.cursotestingandroid.checkout.data.remote.response.OrderConfirmationResponse
 import com.example.cursotestingandroid.core.domain.model.AppError
 import com.example.cursotestingandroid.productlist.data.remote.response.ProductResponse
 import com.example.cursotestingandroid.productlist.data.remote.response.PromotionResponse
@@ -26,6 +27,14 @@ class RemoteDataSource
             try {
                 val response = marketApiService.getPromotions()
                 Result.success(response.promotions)
+            } catch (e: Exception) {
+                Result.failure(mapToDomainError(e))
+            }
+
+        suspend fun placeOrder(): Result<OrderConfirmationResponse> =
+            try {
+                val response = marketApiService.placeOrder()
+                Result.success(response)
             } catch (e: Exception) {
                 Result.failure(mapToDomainError(e))
             }

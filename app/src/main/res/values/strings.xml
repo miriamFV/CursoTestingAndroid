@@ -43,6 +43,7 @@
     <string name="cart_screen_total_amount">Total: %1$s</string>
     <string name="cart_screen_empty_cart">Tu carrito está vacio</string>
     <string name="cart_screen_add_products_to_start">Agrega productos para comenzar</string>
+    <string name="cart_screen_complete_purchase">Finalizar compra</string>
 
     <!-- SettingsScreen -->
     <string name="settings_screen_top_app_bar_title">Ajustes</string>
@@ -57,5 +58,19 @@
     <string name="settings_screen_theme_system">Sistema</string>
     <string name="settings_screen_theme_light">Claro</string>
     <string name="settings_screen_theme_dark">Oscuro</string>
+
+    <!-- CheckoutScreen -->
+    <string name="checkout_screen_top_app_bar_title">Checkout</string>
+    <string name="checkout_screen_button_retry">Reintentar</string>
+    <string name="checkout_screen_order_confirmed">Pedido confirmado: %1$s</string>
+    <string name="checkout_screen_order_estimated_time">Tiempo estimado: %1$s</string>
+    <string name="checkout_screen_order_price">Precio: %1$s</string>
+    <string name="checkout_screen_order_total">Total: %1$.2f</string>
+    <string name="checkout_screen_form_name">Nombre</string>
+    <string name="checkout_screen_form_address">Dirección</string>
+    <string name="checkout_screen_form_email">Email</string>
+    <string name="checkout_screen_form_empty_cart">Tu carrito está vacío</string>
+    <string name="checkout_screen_form_processing_payment">Procesando el pago...</string>
+    <string name="checkout_screen_form_confirm_order">Confirmar pedido</string>
 
 </resources>

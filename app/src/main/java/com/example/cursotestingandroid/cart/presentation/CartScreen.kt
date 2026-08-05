@@ -70,6 +70,7 @@ import java.util.Currency.getInstance
 fun CartScreen(
     onBack: () -> Unit,
     cartViewModel: CartViewModel = hiltViewModel(),
+    navigateToCheckout: () -> Unit
 ) {
     val uiState by cartViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -90,6 +91,7 @@ fun CartScreen(
         onDecreaseQuantity = { productId, quantity -> cartViewModel.decreaseQuantity(productId, quantity) },
         onRefresh = { cartViewModel.refresh() },
         onRemoveFromCart = { id -> cartViewModel.removeFromCart(id) },
+        navigateToCheckout = navigateToCheckout
     )
 }
 
@@ -102,6 +104,7 @@ fun CartScreenContent(
     onDecreaseQuantity: (String, Int) -> Unit,
     onRefresh: () -> Unit,
     onRemoveFromCart: (String) -> Unit,
+    navigateToCheckout: () -> Unit
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -141,6 +144,7 @@ fun CartScreenContent(
                         onDecreaseQuantity(productId, quantity)
                     },
                     onRemove = onRemoveFromCart,
+                    navigateToCheckout = navigateToCheckout
                 )
             }
         }
@@ -188,6 +192,7 @@ fun CartSuccessStateScreen(
     onIncreaseQuantity: (String, Int) -> Unit,
     onDecreaseQuantity: (String, Int) -> Unit,
     onRemove: (String) -> Unit,
+    navigateToCheckout: () -> Unit,
 ) {
     val currencyFormatter =
         remember {
@@ -263,6 +268,9 @@ fun CartSuccessStateScreen(
                 summary = state.summary,
                 currencyFormatter = currencyFormatter,
             )
+            Button(modifier= Modifier.fillMaxWidth(), onClick = navigateToCheckout){
+                Text(text = stringResource(R.string.cart_screen_complete_purchase))
+            }
         }
     }
 }
