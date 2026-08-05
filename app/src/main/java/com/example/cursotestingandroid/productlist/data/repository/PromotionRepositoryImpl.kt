@@ -20,40 +20,42 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class PromotionRepositoryImpl @Inject constructor(
-    val remoteDataSource: RemoteDataSource,
-    val localDataSource: LocalDataSource,
-    val dispatchers: DispatchersProvider,
-    private val json: Json
-) : PromotionRepository{
-    private val refreshScope = CoroutineScope(SupervisorJob() + dispatchers.io)
-    private val refreshMutex = Mutex()
+class PromotionRepositoryImpl
+    @Inject
+    constructor(
+        val remoteDataSource: RemoteDataSource,
+        val localDataSource: LocalDataSource,
+        val dispatchers: DispatchersProvider,
+        private val json: Json,
+    ) : PromotionRepository {
+        private val refreshScope = CoroutineScope(SupervisorJob() + dispatchers.io)
+        private val refreshMutex = Mutex()
 
-    override fun getActivePromotions(): Flow<List<Promotion>> {
-        return localDataSource.getAllPromotions()
-            .map { entities -> entities.mapNotNull { it.toDomainModel(json) } }
-            .onStart {
-                refreshScope.launch {
-                    if (!refreshMutex.tryLock()) return@launch
-                    try {
-                        refreshPromotions()
-                    } catch (e: Exception) {
-                        //TODO f
-                    } finally {
-                        refreshMutex.unlock()
+        override fun getActivePromotions(): Flow<List<Promotion>> {
+            return localDataSource
+                .getAllPromotions()
+                .map { entities -> entities.mapNotNull { it.toDomainModel(json) } }
+                .onStart {
+                    refreshScope.launch {
+                        if (!refreshMutex.tryLock()) return@launch
+                        try {
+                            refreshPromotions()
+                        } catch (e: Exception) {
+                            // TODO f
+                        } finally {
+                            refreshMutex.unlock()
+                        }
                     }
+                }.catch {
+                    // Log importante
                 }
-            }
-            .catch {
-                //Log importante
-            }
-    }
+        }
 
-    override suspend fun refreshPromotions() {
-        withContext(dispatchers.io){
-            val promotions = remoteDataSource.getPromotions().getOrThrow()
-            val promotionsEntity: List<PromotionEntity> = promotions.mapNotNull { it.toEntity(json) }
-            localDataSource.savePromotions(promotionsEntity)
+        override suspend fun refreshPromotions() {
+            withContext(dispatchers.io) {
+                val promotions = remoteDataSource.getPromotions().getOrThrow()
+                val promotionsEntity: List<PromotionEntity> = promotions.mapNotNull { it.toEntity(json) }
+                localDataSource.savePromotions(promotionsEntity)
+            }
         }
     }
-}

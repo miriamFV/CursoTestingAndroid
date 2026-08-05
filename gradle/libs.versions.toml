@@ -24,6 +24,8 @@ material3 = "1.4.0"
 mockk = "1.14.11"
 turbine = "1.2.1"
 mockwebserver = "5.3.2"
+ktlint = "14.2.0"
+kover = "0.9.9"
 
 
 [libraries]
@@ -99,3 +101,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+

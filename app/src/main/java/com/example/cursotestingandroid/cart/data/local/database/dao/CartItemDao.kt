@@ -11,12 +11,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartItemDao {
-
     @Query("SELECT * FROM cart_items")
     fun getAllCartItems(): Flow<List<CartItemEntity>>
 
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
-    suspend fun getCartItemById(productId:String): CartItemEntity?
+    suspend fun getCartItemById(productId: String): CartItemEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCartItem(cartItem: CartItemEntity)

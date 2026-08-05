@@ -6,16 +6,18 @@ import okhttp3.mockwebserver.RecordedRequest
 
 class MarketApiDispatcher(
     private val productJson: String,
-    private val promoJson: String = """{"promotions":[]}"""
+    private val promoJson: String = """{"promotions":[]}""",
 ) : Dispatcher() {
-
-    override fun dispatch(request: RecordedRequest): MockResponse {
-        return when {
-            request.path?.contains("promotions.json") == true -> MockResponse().setBody(promoJson)
-                .setResponseCode(200)
-            request.path?.contains("products.json") == true -> MockResponse().setBody(productJson)
-                .setResponseCode(200)
+    override fun dispatch(request: RecordedRequest): MockResponse =
+        when {
+            request.path?.contains("promotions.json") == true ->
+                MockResponse()
+                    .setBody(promoJson)
+                    .setResponseCode(200)
+            request.path?.contains("products.json") == true ->
+                MockResponse()
+                    .setBody(productJson)
+                    .setResponseCode(200)
             else -> MockResponse().setResponseCode(404)
         }
-    }
 }

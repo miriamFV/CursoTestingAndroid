@@ -3,6 +3,7 @@ package com.example.cursotestingandroid.cart.domain.ex
 import com.example.cursotestingandroid.productlist.domain.model.Promotion
 import java.time.Instant
 
-fun List<Promotion>.activeAt(now: Instant):List<Promotion> = this.filter {
-    it.startTime <= now && it.endTime >= now
-}
+fun List<Promotion>.activeAt(now: Instant): List<Promotion> =
+    this.filter {
+        it.startTime <= now && it.endTime >= now
+    }

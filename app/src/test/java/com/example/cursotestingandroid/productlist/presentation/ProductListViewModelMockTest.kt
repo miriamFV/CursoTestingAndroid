@@ -19,78 +19,76 @@ import org.junit.Rule
 import org.junit.Test
 
 class ProductListViewModelMockTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val settingsRepository: SettingsRepository = mockk(relaxed = true){
-        every { selectedCategory } returns flowOf(null)
-        every { sortOption } returns flowOf(SortOption.NONE)
-        every { inStockOnly } returns flowOf(false)
-        every { filtersVisible } returns flowOf(true)
-    }
+    private val settingsRepository: SettingsRepository =
+        mockk(relaxed = true) {
+            every { selectedCategory } returns flowOf(null)
+            every { sortOption } returns flowOf(SortOption.NONE)
+            every { inStockOnly } returns flowOf(false)
+            every { filtersVisible } returns flowOf(true)
+        }
 
     private fun createViewModel(
         fakeProductRepository: ProductRepository = FakeProductRepository(),
         fakePromotionRepository: FakePromotionRepository = FakePromotionRepository(),
         fakeSettingsRepository: FakeSettingsRepository = FakeSettingsRepository(),
-        fakeClock: FakeSystemClock = FakeSystemClock()
+        fakeClock: FakeSystemClock = FakeSystemClock(),
     ): ProductListViewModel {
-
-        val getProductUseCase = GetProductsUseCase(
-            fakeProductRepository,
-            fakePromotionRepository,
-            GetPromotionForProduct(),
-            fakeSettingsRepository, //fake repository to make use case as realistic as possible
-            fakeClock
-        )
+        val getProductUseCase =
+            GetProductsUseCase(
+                fakeProductRepository,
+                fakePromotionRepository,
+                GetPromotionForProduct(),
+                fakeSettingsRepository, // fake repository to make use case as realistic as possible
+                fakeClock,
+            )
         return ProductListViewModel(
             getProductsUseCase = getProductUseCase,
-            settingsRepository = settingsRepository //mocked repository for the setters methods
+            settingsRepository = settingsRepository, // mocked repository for the setters methods
         )
     }
 
     @Test
     fun givenCategory_whenSetCategory_thenDelegatesToSettingsRepository() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val viewModel = createViewModel()
             val category = "carne"
 
-            //When
+            // When
             viewModel.setCategory(category)
 
-            //Then
-            coVerify(exactly = 1){ settingsRepository.setSelectedCategory(category)}
+            // Then
+            coVerify(exactly = 1) { settingsRepository.setSelectedCategory(category) }
         }
 
     @Test
     fun givenSortOption_whenSetSortOption_thenDelegatesToSettingsRepository() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val viewModel = createViewModel()
             val sortOption = SortOption.PRICE_ASC
 
-            //When
+            // When
             viewModel.setSortOption(sortOption)
 
-            //Then
-            coVerify(exactly = 1){ settingsRepository.setSortOption(sortOption)}
+            // Then
+            coVerify(exactly = 1) { settingsRepository.setSortOption(sortOption) }
         }
-
 
     @Test
     fun givenFilterVisible_whenSetFilterVisible_thenDelegatesToSettingsRepository() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val viewModel = createViewModel()
             val filterVisible = true
 
-            //When
+            // When
             viewModel.setFiltersVisible(filterVisible)
 
-            //Then
-            coVerify(exactly = 1){ settingsRepository.setFiltersVisible(filterVisible)}
+            // Then
+            coVerify(exactly = 1) { settingsRepository.setFiltersVisible(filterVisible) }
         }
-
 }

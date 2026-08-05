@@ -14,22 +14,22 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SettingsViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
     fun givenRepositoryWithValues_whenViewModelIsInitialized_thenUiStateIsUpdated() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
-            val settingsRepository = FakeSettingsRepository().apply {
-                setInStockOnly(true)
-            }
+            // Given
+            val settingsRepository =
+                FakeSettingsRepository().apply {
+                    setInStockOnly(true)
+                }
 
-            //When
+            // When
             val viewModel = SettingsViewModel(settingsRepository)
 
-            //Then
+            // Then
             viewModel.uiState.test {
                 val state = awaitItem()
                 assertTrue(state.inStockOnly)
@@ -40,17 +40,17 @@ class SettingsViewModelTest {
     @Test
     fun givenViewModel_whenThemeModeIsChanged_thenUiStateAndRepositoryAreUpdated() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val fakeSettingsRepository = FakeSettingsRepository()
             val viewModel = SettingsViewModel(fakeSettingsRepository)
 
             viewModel.uiState.test {
-                awaitItem() //We’ll wait in case something hasn’t loaded yet
-                //When
+                awaitItem() // We’ll wait in case something hasn’t loaded yet
+                // When
                 val newThemeMode = ThemeMode.DARK
                 viewModel.setThemeMode(newThemeMode)
 
-                //Then
+                // Then
                 val state = awaitItem()
                 assertEquals(newThemeMode, state.themeMode)
                 assertEquals(newThemeMode, fakeSettingsRepository.themeMode.first())
@@ -61,16 +61,16 @@ class SettingsViewModelTest {
     @Test
     fun givenViewModel_whenInStockOnlyIsChanged_thenUiStateAndRepositoryAreUpdated() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val fakeSettingsRepository = FakeSettingsRepository()
             val viewModel = SettingsViewModel(fakeSettingsRepository)
 
             viewModel.uiState.test {
-                awaitItem() //We’ll wait in case something hasn’t loaded yet
-                //When
+                awaitItem() // We’ll wait in case something hasn’t loaded yet
+                // When
                 viewModel.setInStockOnly(true)
 
-                //Then
+                // Then
                 val state = awaitItem()
                 assertTrue(state.inStockOnly)
                 assertTrue(fakeSettingsRepository.inStockOnly.first())
@@ -81,22 +81,21 @@ class SettingsViewModelTest {
     @Test
     fun givenViewModel_whenRepositoryChangeExternally_thenUiStateUpdateAutomatically() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val fakeSettingsRepository = FakeSettingsRepository()
             val viewModel = SettingsViewModel(fakeSettingsRepository)
 
             viewModel.uiState.test {
-                awaitItem() //We’ll wait in case something hasn’t loaded yet
+                awaitItem() // We’ll wait in case something hasn’t loaded yet
 
-                //When
+                // When
                 fakeSettingsRepository.setInStockOnly(true)
 
-                //Then
+                // Then
                 val state = awaitItem()
                 assertTrue(state.inStockOnly)
                 assertTrue(fakeSettingsRepository.inStockOnly.first())
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 }

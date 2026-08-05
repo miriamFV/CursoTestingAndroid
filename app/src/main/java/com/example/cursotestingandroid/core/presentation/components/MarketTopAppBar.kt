@@ -18,8 +18,11 @@ import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.TOP_B
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MarketTopAppBar(modifier: Modifier = Modifier, title: String, onBackSelected: () -> Unit) {
-
+fun MarketTopAppBar(
+    modifier: Modifier = Modifier,
+    title: String,
+    onBackSelected: () -> Unit,
+) {
     TopAppBar(
         modifier = modifier,
         title = {
@@ -27,21 +30,25 @@ fun MarketTopAppBar(modifier: Modifier = Modifier, title: String, onBackSelected
                 modifier = Modifier.testTag(TOP_BAR_TITLE),
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
-        }, navigationIcon = {
+        },
+        navigationIcon = {
             IconButton(
                 modifier = Modifier.testTag(TOP_APP_BAR_BACK),
-                onClick = { onBackSelected() }) {
+                onClick = { onBackSelected() },
+            ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "back",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        },
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
     )
 }

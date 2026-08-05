@@ -11,24 +11,22 @@ import org.junit.Rule
 import org.junit.Test
 
 class MainViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private fun createViewModel(
-        fakeSettingsRepository: SettingsRepository = FakeSettingsRepository()
-    ): MainViewModel =  MainViewModel(settingsRepository = fakeSettingsRepository)
+    private fun createViewModel(fakeSettingsRepository: SettingsRepository = FakeSettingsRepository()): MainViewModel =
+        MainViewModel(settingsRepository = fakeSettingsRepository)
 
     @Test
     fun givenDefaultRepository_whenInitialized_thenEmitsSystemThemeMode() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val fakeSettingsRepository = FakeSettingsRepository()
 
-            //When
+            // When
             val viewModel = createViewModel(fakeSettingsRepository)
 
-            //Then
+            // Then
             viewModel.themeMode.test {
                 val state = awaitItem()
                 assertTrue(state is ThemeMode.SYSTEM)
@@ -39,19 +37,18 @@ class MainViewModelTest {
     @Test
     fun givenRepositoryWithDarkMode_whenInitialized_thenEmitsDarkThemeMode() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val fakeSettingsRepository =
                 FakeSettingsRepository().apply { setThemeMode(ThemeMode.DARK) }
 
-            //When
+            // When
             val viewModel = createViewModel(fakeSettingsRepository)
 
-            //Then
+            // Then
             viewModel.themeMode.test {
                 val state = awaitItem()
                 assertTrue(state is ThemeMode.DARK)
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 }

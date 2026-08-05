@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class FakeSettingsRepository : SettingsRepository {
-
     private val _inStockOnly = MutableStateFlow(false)
     private val _themeMode = MutableStateFlow<ThemeMode>(ThemeMode.SYSTEM)
     private val _selectedCategory = MutableStateFlow<String?>(null)

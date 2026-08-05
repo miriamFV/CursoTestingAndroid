@@ -16,7 +16,6 @@ import org.junit.Test
 import java.time.Instant
 
 class GetProductDetailWithPromotionUseCaseTest {
-
     private lateinit var clock: FakeSystemClock
     private lateinit var fakeProductRepo: FakeProductRepository
     private lateinit var fakePromotionRepo: FakePromotionRepository
@@ -33,104 +32,117 @@ class GetProductDetailWithPromotionUseCaseTest {
             fakeProductRepo,
             fakePromotionRepo,
             GetPromotionForProduct(),
-            clock
+            clock,
         )
 
     @Test
-    fun givenActivePromotion_whenInvoke_thenReturnsProductWithPromotion() = runTest {
-        //Given
-        val now = clock.now()
-        val productId = "productId"
-        val product = product { withId(productId); withName("Pan") }
-        val promotion = promotion {
-            withProductsIds(listOf(productId))
-            withStartTime(now.minusSeconds(10)); withEndTime(now.plusSeconds(10))
+    fun givenActivePromotion_whenInvoke_thenReturnsProductWithPromotion() =
+        runTest {
+            // Given
+            val now = clock.now()
+            val productId = "productId"
+            val product =
+                product {
+                    withId(productId)
+                    withName("Pan")
+                }
+            val promotion =
+                promotion {
+                    withProductsIds(listOf(productId))
+                    withStartTime(now.minusSeconds(10))
+                    withEndTime(now.plusSeconds(10))
+                }
+            fakeProductRepo.setProducts(listOf(product))
+            fakePromotionRepo.setPromotions(listOf(promotion))
+
+            // When
+            val result = useCase()(productId).first()
+
+            // Then
+            assertNotNull(result)
+            assertEquals(productId, result?.product?.id)
+            assertNotNull(result?.promotion)
         }
-        fakeProductRepo.setProducts(listOf(product))
-        fakePromotionRepo.setPromotions(listOf(promotion))
-
-        //When
-        val result = useCase()(productId).first()
-
-        //Then
-        assertNotNull(result)
-        assertEquals(productId, result?.product?.id)
-        assertNotNull(result?.promotion)
-    }
 
     @Test
-    fun givenExpiredPromotion_whenInvoke_thenReturnsProductWithoutPromotion() = runTest {
-        //Given
-        val now = clock.now()
-        val productId = "productId"
-        val product = product { withId(productId) }
-        val promotion = promotion {
-            withProductsIds(listOf(productId))
-            withStartTime(now.minusSeconds(20)); withEndTime(now.minusSeconds(10))
+    fun givenExpiredPromotion_whenInvoke_thenReturnsProductWithoutPromotion() =
+        runTest {
+            // Given
+            val now = clock.now()
+            val productId = "productId"
+            val product = product { withId(productId) }
+            val promotion =
+                promotion {
+                    withProductsIds(listOf(productId))
+                    withStartTime(now.minusSeconds(20))
+                    withEndTime(now.minusSeconds(10))
+                }
+            fakeProductRepo.setProducts(listOf(product))
+            fakePromotionRepo.setPromotions(listOf(promotion))
+
+            // When
+            val result = useCase().invoke(productId).first()
+
+            // Then
+            assertNotNull(result)
+            assertNotNull(result?.product)
+            assertNull(result?.promotion)
         }
-        fakeProductRepo.setProducts(listOf(product))
-        fakePromotionRepo.setPromotions(listOf(promotion))
-
-        //When
-        val result = useCase().invoke(productId).first()
-
-        //Then
-        assertNotNull(result)
-        assertNotNull(result?.product)
-        assertNull(result?.promotion)
-    }
 
     @Test
-    fun givenNonExistingProductId_whenInvoke_thenReturnsNull() = runTest {
-        //Given
-        val now = clock.now()
-        val productId = "productId"
-        val wrongProductId = "wrongProductId"
-        val product = product { withId(productId) }
-        val promotion = promotion {
-            withProductsIds(listOf(productId))
-            withStartTime(now.minusSeconds(20)); withEndTime(now.minusSeconds(10))
+    fun givenNonExistingProductId_whenInvoke_thenReturnsNull() =
+        runTest {
+            // Given
+            val now = clock.now()
+            val productId = "productId"
+            val wrongProductId = "wrongProductId"
+            val product = product { withId(productId) }
+            val promotion =
+                promotion {
+                    withProductsIds(listOf(productId))
+                    withStartTime(now.minusSeconds(20))
+                    withEndTime(now.minusSeconds(10))
+                }
+
+            fakeProductRepo.setProducts(listOf(product))
+            fakePromotionRepo.setPromotions(listOf(promotion))
+
+            // When
+            val result = useCase().invoke(wrongProductId).first()
+
+            // Then
+            assertNull(result)
         }
-
-        fakeProductRepo.setProducts(listOf(product))
-        fakePromotionRepo.setPromotions(listOf(promotion))
-
-        //When
-        val result = useCase().invoke(wrongProductId).first()
-
-        //Then
-        assertNull(result)
-    }
-
 
     @Test
-    fun givenActivePromotion_whenTimeAdvances_thenProductPromotionBecomesNull() = runTest {
-        //Given
-        val now = clock.now()
-        val productId = "productId"
-        val product = product { withId(productId) }
-        val promotion = promotion {
-            withProductsIds(listOf(productId))
-            withStartTime(now.minusSeconds(20)); withEndTime(now.plusSeconds(5))
+    fun givenActivePromotion_whenTimeAdvances_thenProductPromotionBecomesNull() =
+        runTest {
+            // Given
+            val now = clock.now()
+            val productId = "productId"
+            val product = product { withId(productId) }
+            val promotion =
+                promotion {
+                    withProductsIds(listOf(productId))
+                    withStartTime(now.minusSeconds(20))
+                    withEndTime(now.plusSeconds(5))
+                }
+
+            fakeProductRepo.setProducts(listOf(product))
+            fakePromotionRepo.setPromotions(listOf(promotion))
+
+            // When
+            val resultBeforeAdvanceTime = useCase()(productId).first()
+            clock.advanceTime(6)
+            val resultAfterAdvanceTime = useCase()(productId).first()
+
+            // Then
+            assertNotNull(resultBeforeAdvanceTime)
+            assertEquals(productId, resultBeforeAdvanceTime?.product?.id)
+            assertNotNull(resultBeforeAdvanceTime?.promotion)
+
+            assertNotNull(resultAfterAdvanceTime)
+            assertNotNull(resultAfterAdvanceTime?.product)
+            assertNull(resultAfterAdvanceTime?.promotion)
         }
-
-        fakeProductRepo.setProducts(listOf(product))
-        fakePromotionRepo.setPromotions(listOf(promotion))
-
-        //When
-        val resultBeforeAdvanceTime = useCase()(productId).first()
-        clock.advanceTime(6)
-        val resultAfterAdvanceTime = useCase()(productId).first()
-
-        //Then
-        assertNotNull(resultBeforeAdvanceTime)
-        assertEquals(productId, resultBeforeAdvanceTime?.product?.id)
-        assertNotNull(resultBeforeAdvanceTime?.promotion)
-
-        assertNotNull(resultAfterAdvanceTime)
-        assertNotNull(resultAfterAdvanceTime?.product)
-        assertNull(resultAfterAdvanceTime?.promotion)
-
-    }
-
 }

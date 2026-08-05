@@ -4,7 +4,7 @@ import com.example.cursotestingandroid.productlist.data.local.database.entity.Pr
 import com.example.cursotestingandroid.productlist.data.remote.response.ProductResponse
 import com.example.cursotestingandroid.productlist.domain.model.Product
 
-fun ProductResponse.toEntity(): ProductEntity{
+fun ProductResponse.toEntity(): ProductEntity {
     val finalPrice = price?.div(100.0) ?: 0.0
     return ProductEntity(
         id = id,
@@ -16,8 +16,9 @@ fun ProductResponse.toEntity(): ProductEntity{
         imageUrl = imageUrl,
     )
 }
+
 fun ProductEntity.toDomainModel(): Product? {
-    if(category.isNullOrEmpty()) return null
+    if (category.isNullOrEmpty()) return null
 
     return Product(
         id = id,

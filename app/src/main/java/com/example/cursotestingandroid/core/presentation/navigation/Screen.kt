@@ -4,13 +4,18 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Screen: NavKey {
+sealed interface Screen : NavKey {
     @Serializable
-    data object ProductList: Screen
+    data object ProductList : Screen
+
     @Serializable
-    data object Cart: Screen
+    data object Cart : Screen
+
     @Serializable
-    data object Settings: Screen
+    data object Settings : Screen
+
     @Serializable
-    data class ProductDetail(val productId: String): Screen
+    data class ProductDetail(
+        val productId: String,
+    ) : Screen
 }

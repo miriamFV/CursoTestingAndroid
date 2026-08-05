@@ -12,7 +12,7 @@ fun AddToCartButton(
     modifier: Modifier = Modifier,
     product: Product?,
     isLoading: Boolean,
-    addToCart: () -> Unit
+    addToCart: () -> Unit,
 ) {
     product?.let {
         if (it.stock > 0) {
@@ -20,7 +20,7 @@ fun AddToCartButton(
                 modifier = modifier.testTag(PRODUCT_DETAIL_ADD_TO_CART_BUTTON),
                 product = product,
                 isLoading = isLoading,
-                addToCart = addToCart
+                addToCart = addToCart,
             )
         } else {
             AddToCartButtonNoStock(modifier.testTag(PRODUCT_DETAIL_ADD_TO_CART_BUTTON_NO_STOCK))

@@ -24,29 +24,34 @@ import com.example.cursotestingandroid.R
 import com.example.cursotestingandroid.productlist.domain.model.Product
 
 @Composable
-fun AddToCartButtonWithStock(modifier: Modifier = Modifier, product: Product, isLoading: Boolean, addToCart: () -> Unit) {
+fun AddToCartButtonWithStock(
+    modifier: Modifier = Modifier,
+    product: Product,
+    isLoading: Boolean,
+    addToCart: () -> Unit,
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shadowElevation = 8.dp,
-        tonalElevation = 2.dp
+        tonalElevation = 2.dp,
     ) {
-        Box(Modifier.padding(16.dp)){
+        Box(Modifier.padding(16.dp)) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { addToCart() },
                 enabled = !isLoading,
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.product_detail_screen_add_to_cart_button_with_stock),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.product_detail_screen_add_to_cart_button_with_stock),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

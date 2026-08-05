@@ -9,22 +9,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlin.collections.List
 
 class FakeCartRepository : CartRepository {
-
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
 
-    fun setCartItems(items: List<CartItem>){
+    fun setCartItems(items: List<CartItem>) {
         _cartItems.value = items
     }
 
     override fun getCartItems(): Flow<List<CartItem>> = _cartItems.asStateFlow()
 
-    override suspend fun addToCart(productId: String, quantity: Int) {
+    override suspend fun addToCart(
+        productId: String,
+        quantity: Int,
+    ) {
         val currentItems = _cartItems.value.toMutableList()
         val existingIndex = currentItems.indexOfFirst { it.productId == productId }
         if (existingIndex >= 0) {
             val item = currentItems[existingIndex]
             currentItems[existingIndex] = item.copy(quantity = item.quantity + quantity)
-        }else{
+        } else {
             currentItems.add(CartItem(productId = productId, quantity = quantity))
         }
         _cartItems.value = currentItems
@@ -36,20 +38,23 @@ class FakeCartRepository : CartRepository {
 
         if (existingIndex >= 0) {
             currentItems.removeAt(existingIndex)
-        }else{
+        } else {
             throw AppError.NotFoundError
         }
         _cartItems.value = currentItems
     }
 
-    override suspend fun updateQuantity(productId: String, quantity: Int) {
+    override suspend fun updateQuantity(
+        productId: String,
+        quantity: Int,
+    ) {
         val currentItems = _cartItems.value.toMutableList()
         val existingIndex = currentItems.indexOfFirst { it.productId == productId }
 
         if (existingIndex >= 0) {
             val item = currentItems[existingIndex]
             currentItems[existingIndex] = item.copy(quantity = item.quantity + quantity)
-        }else{
+        } else {
             throw AppError.NotFoundError
         }
         _cartItems.value = currentItems
@@ -59,7 +64,6 @@ class FakeCartRepository : CartRepository {
         _cartItems.value = emptyList()
     }
 
-    override suspend fun getCartItemById(productId: String): CartItem? {
-        return _cartItems.value.find { it.productId == productId }
-    }
+    override suspend fun getCartItemById(productId: String): CartItem? =
+        _cartItems.value.find { it.productId == productId }
 }
