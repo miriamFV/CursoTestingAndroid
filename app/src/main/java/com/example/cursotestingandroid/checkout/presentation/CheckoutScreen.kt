@@ -48,7 +48,7 @@ fun CheckoutScreen(
     CheckoutContent(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
-        onBack = onBack,
+        onBack = { viewModel.onExit { onBack() } },
         onRetry = { viewModel.onRetry() },
         onNameChanged = { viewModel.onNameChanged(it)},
         onEmailChanged = { viewModel.onEmailChanged(it)},
@@ -69,9 +69,12 @@ fun CheckoutContent(
     onAddressChanged: (String) -> Unit,
     onConfirm: () -> Unit,
 ) {
+    println("CheckoutContent - uiState: $uiState")
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { MarketTopAppBar(title = stringResource(R.string.checkout_screen_top_app_bar_title)) { onBack() } },
+        topBar = { MarketTopAppBar(title = stringResource(R.string.checkout_screen_top_app_bar_title)) {
+            onBack()
+        } },
     ) { paddingValues ->
         Box(
             Modifier

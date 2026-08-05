@@ -1,6 +1,5 @@
 package com.example.cursotestingandroid.checkout.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cursotestingandroid.cart.domain.usecase.GetCartSummaryUseCase
@@ -86,13 +85,17 @@ class CheckoutViewModel @Inject constructor(
             placeOrderUseCase()
                 .onSuccess {
                     submission.value = Submission.Success(it)
-                    Log.v("Miriam", "Success $it")
                 }
                 .onFailure { e ->
                     submission.value = Submission.Failed(e.message.orEmpty())
                     _event.emit(CheckoutEvent.ShowMessage(e.message.orEmpty()))
                 }
         }
+    }
+
+    fun onExit(onBack: () -> Unit) {
+        submission.update { if (it is Submission.Success) Submission.Idle else it }
+        onBack()
     }
 
 }
