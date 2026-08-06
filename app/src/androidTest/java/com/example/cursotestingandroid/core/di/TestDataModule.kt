@@ -9,6 +9,8 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.cursotestingandroid.cart.data.local.database.dao.CartItemDao
 import com.example.cursotestingandroid.cart.data.repository.CartRepositoryImpl
 import com.example.cursotestingandroid.cart.domain.repository.CartRepository
+import com.example.cursotestingandroid.checkout.data.repository.OrderRepositoryImpl
+import com.example.cursotestingandroid.checkout.domain.repository.OrderRepository
 import com.example.cursotestingandroid.core.data.coroutines.DefaultDispatchersProvider
 import com.example.cursotestingandroid.core.data.local.database.MarketDatabase
 import com.example.cursotestingandroid.core.data.util.SystemClock
@@ -51,6 +53,11 @@ object TestDataModule {
     @Singleton
     fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository =
         promotionRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun provideOrderRepositoryImpl(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository =
+        orderRepositoryImpl
 
     @Provides
     fun providesProductDao(database: MarketDatabase): ProductDao = database.productDao()
