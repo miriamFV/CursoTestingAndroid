@@ -49,4 +49,11 @@ object UiTestTag {
     fun cartQuantityIncrease(productId: String) = "cart_quantity_increase_$productId"
 
     fun cartQuantityDecrease(productId: String) = "cart_quantity_decrease_$productId"
+
+    // CHECKOUT SCREEN
+    const val CHECKOUT_LOADING = "checkout_loading"
+    const val CHECKOUT_CONFIRM_BUTTON = "checkout_confirm_button"
+    const val CHECKOUT_FORM_EMAIL_FIELD = "checkout_form_email_field"
+    const val CHECKOUT_RETRY_BUTTON = "checkout_retry_button"
+    const val CHECKOUT_ORDER_CONFIRMATION = "checkout_order_confirmation"
 }

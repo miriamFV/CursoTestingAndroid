@@ -7,7 +7,5 @@ import kotlinx.serialization.Serializable
 class OrderConfirmationResponse(
     @SerialName("orderId") val orderId: String,
     @SerialName("etaMinutes") val etaMinutes: Int,
-    @SerialName("total") val total: Double
-){
-
-}
+    @SerialName("total") val total: Double,
+)

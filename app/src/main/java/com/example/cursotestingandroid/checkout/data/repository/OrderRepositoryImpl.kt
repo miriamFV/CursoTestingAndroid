@@ -6,11 +6,10 @@ import com.example.cursotestingandroid.checkout.domain.repository.OrderRepositor
 import com.example.cursotestingandroid.productlist.data.remote.RemoteDataSource
 import javax.inject.Inject
 
-class OrderRepositoryImpl @Inject
-constructor(
-    private val remoteDataSource: RemoteDataSource
-) : OrderRepository {
-    override suspend fun placeOrder(): OrderConfirmation {
-        return remoteDataSource.placeOrder().getOrThrow().toDomain()
+class OrderRepositoryImpl
+    @Inject
+    constructor(
+        private val remoteDataSource: RemoteDataSource,
+    ) : OrderRepository {
+        override suspend fun placeOrder(): OrderConfirmation = remoteDataSource.placeOrder().getOrThrow().toDomain()
     }
-}

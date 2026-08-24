@@ -49,7 +49,7 @@ class CartScreenTest {
                 onDecreaseQuantity = onDecreaseQuantity,
                 onRefresh = onRefresh,
                 onRemoveFromCart = onRemoveFromCart,
-                navigateToCheckout = navigateToCheckout
+                navigateToCheckout = navigateToCheckout,
             )
         }
     }

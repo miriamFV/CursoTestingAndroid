@@ -56,8 +56,7 @@ object TestDataModule {
 
     @Provides
     @Singleton
-    fun provideOrderRepositoryImpl(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository =
-        orderRepositoryImpl
+    fun provideOrderRepositoryImpl(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository = orderRepositoryImpl
 
     @Provides
     fun providesProductDao(database: MarketDatabase): ProductDao = database.productDao()

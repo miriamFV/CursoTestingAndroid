@@ -35,7 +35,8 @@ fun NavGraph() {
             entry<Screen.Cart> {
                 CartScreen(
                     onBack = { backStack.removeLastOrNull() },
-                    navigateToCheckout = { backStack.add(Screen.Checkout) })
+                    navigateToCheckout = { backStack.add(Screen.Checkout) },
+                )
             }
             entry<Screen.Settings> {
                 SettingsScreen(onBack = { backStack.removeLastOrNull() })

@@ -52,8 +52,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideOrderRepository(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository =
-        orderRepositoryImpl
+    fun provideOrderRepository(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository = orderRepositoryImpl
 
     @Provides
     fun providesProductDao(database: MarketDatabase): ProductDao = database.productDao()
