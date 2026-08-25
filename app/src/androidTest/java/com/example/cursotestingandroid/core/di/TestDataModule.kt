@@ -9,6 +9,8 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.cursotestingandroid.cart.data.local.database.dao.CartItemDao
 import com.example.cursotestingandroid.cart.data.repository.CartRepositoryImpl
 import com.example.cursotestingandroid.cart.domain.repository.CartRepository
+import com.example.cursotestingandroid.checkout.data.repository.OrderRepositoryImpl
+import com.example.cursotestingandroid.checkout.domain.repository.OrderRepository
 import com.example.cursotestingandroid.core.data.coroutines.DefaultDispatchersProvider
 import com.example.cursotestingandroid.core.data.local.database.MarketDatabase
 import com.example.cursotestingandroid.core.data.util.SystemClock
@@ -31,75 +33,62 @@ import javax.inject.Singleton
 
 private val Context.testingDataStore: DataStore<Preferences> by preferencesDataStore("testing_settings")
 
-
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataModule::class]
+    replaces = [DataModule::class],
 )
 object TestDataModule {
+    @Provides
+    @Singleton
+    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider =
+        defaultDispatchersProvider
 
     @Provides
     @Singleton
-    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider{
-        return defaultDispatchersProvider
-    }
+    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository =
+        productRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository {
-        return productRepositoryImpl
-    }
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository =
+        promotionRepositoryImpl
 
     @Provides
     @Singleton
-    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository {
-        return promotionRepositoryImpl
-    }
+    fun provideOrderRepositoryImpl(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository = orderRepositoryImpl
 
     @Provides
-    fun providesProductDao(database: MarketDatabase): ProductDao {
-        return database.productDao()
-    }
+    fun providesProductDao(database: MarketDatabase): ProductDao = database.productDao()
 
     @Provides
-    fun providesPromotionDao(database: MarketDatabase): PromotionDao {
-        return database.promotionDao()
-    }
+    fun providesPromotionDao(database: MarketDatabase): PromotionDao = database.promotionDao()
 
     @Provides
-    fun providesCartItemDao(database: MarketDatabase): CartItemDao {
-        return database.cartItemDao()
-    }
+    fun providesCartItemDao(database: MarketDatabase): CartItemDao = database.cartItemDao()
 
     @Provides
     @Singleton
-    fun providesDatabase():MarketDatabase{
+    fun providesDatabase(): MarketDatabase {
         val context = ApplicationProvider.getApplicationContext<Context>()
         return Room.inMemoryDatabaseBuilder(context, MarketDatabase::class.java).build()
     }
 
     @Provides
     @Singleton
-    fun provideDataStore(): DataStore<Preferences>{
-        return ApplicationProvider.getApplicationContext<Context>().testingDataStore
-    }
+    fun provideDataStore(): DataStore<Preferences> =
+        ApplicationProvider.getApplicationContext<Context>().testingDataStore
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
-        return settingsRepositoryImpl
-    }
-    @Provides
-    @Singleton
-    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository {
-        return cartRepositoryImpl
-    }
+    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository =
+        settingsRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideClock(systemClock: SystemClock): Clock {
-        return systemClock
-    }
+    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository = cartRepositoryImpl
 
+    @Provides
+    @Singleton
+    fun provideClock(systemClock: SystemClock): Clock = systemClock
 }

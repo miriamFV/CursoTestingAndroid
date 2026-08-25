@@ -13,29 +13,30 @@ import com.example.cursotestingandroid.productlist.domain.model.ProductWithPromo
 
 object CartUiStateMother {
     fun cartSuccess(
-        summary: CartSummary? = CartSummary(
-            subtotal = 11.0,
-            discountTotal = 0.7,
-            finalTotal = 10.3
-        ),
-        cartItems: List<CartItemWithPromotion> = listOf(
-            cartItemWithPromotion(product = bread(), quantity = 2),
-            cartItemWithPromotion(product = coffee(), quantity = 1, promotion = percent())
-        ),
-        isLoading: Boolean = false
-
+        summary: CartSummary? =
+            CartSummary(
+                subtotal = 11.0,
+                discountTotal = 0.7,
+                finalTotal = 10.3,
+            ),
+        cartItems: List<CartItemWithPromotion> =
+            listOf(
+                cartItemWithPromotion(product = bread(), quantity = 2),
+                cartItemWithPromotion(product = coffee(), quantity = 1, promotion = percent()),
+            ),
+        isLoading: Boolean = false,
     ) = CartUiState.Success(
         summary = summary,
         cartItems = cartItems,
-        isLoading = isLoading
+        isLoading = isLoading,
     )
 
     fun cartItemWithPromotion(
         product: Product,
         quantity: Int,
-        promotion: ProductPromotion? = null
+        promotion: ProductPromotion? = null,
     ) = CartItemWithPromotion(
         cartItem = CartItem(productId = product.id, quantity = quantity),
-        item = ProductWithPromotion(product = product, promotion = promotion)
+        item = ProductWithPromotion(product = product, promotion = promotion),
     )
 }

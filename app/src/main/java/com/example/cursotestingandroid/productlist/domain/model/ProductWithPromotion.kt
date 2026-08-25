@@ -2,19 +2,18 @@ package com.example.cursotestingandroid.productlist.domain.model
 
 data class ProductWithPromotion(
     val product: Product,
-    val promotion:ProductPromotion? = null
+    val promotion: ProductPromotion? = null,
 )
 
-sealed interface ProductPromotion{
-
+sealed interface ProductPromotion {
     data class Percent(
-        val percent:Double,
-        val discountedPrice:Double
-    ): ProductPromotion
+        val percent: Double,
+        val discountedPrice: Double,
+    ) : ProductPromotion
 
     data class BuyXPayY(
-        val buy:Int,
-        val pay:Int,
-        val label:String
-    ): ProductPromotion
+        val buy: Int,
+        val pay: Int,
+        val label: String,
+    ) : ProductPromotion
 }

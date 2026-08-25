@@ -6,25 +6,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PromotionsResponse(
     @SerialName("promotions")
-    val promotions: List<PromotionResponse>
+    val promotions: List<PromotionResponse>,
 )
 
 @Serializable
 data class PromotionResponse(
     @SerialName("id")
-    val id:String,
+    val id: String,
     @SerialName("productId")
-    val productId:String,
+    val productId: String,
     @SerialName("type")
-    val type:String,
+    val type: String,
     @SerialName("percent")
-    val percent:Int? = null,
+    val percent: Int? = null,
     @SerialName("buyX")
-    val buyX:Int? = null,
+    val buyX: Int? = null,
     @SerialName("payY")
-    val payY:Int? = null,
+    val payY: Int? = null,
     @SerialName("startAtEpoch")
-    val startAtEpoch:Long? = null,
+    val startAtEpoch: Long? = null,
     @SerialName("endAtEpoch")
-    val endAtEpoch:Long? = null,
+    val endAtEpoch: Long? = null,
 )

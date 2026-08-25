@@ -5,8 +5,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class MockWebServerRule: TestWatcher() {
-
+class MockWebServerRule : TestWatcher() {
     val server = MockWebServer()
 
     override fun starting(description: Description?) {

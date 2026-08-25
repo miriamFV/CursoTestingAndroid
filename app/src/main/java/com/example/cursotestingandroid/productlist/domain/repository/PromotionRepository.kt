@@ -5,5 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PromotionRepository {
     fun getActivePromotions(): Flow<List<Promotion>>
+
     suspend fun refreshPromotions()
 }

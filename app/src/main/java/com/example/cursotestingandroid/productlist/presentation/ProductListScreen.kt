@@ -41,23 +41,22 @@ import com.example.cursotestingandroid.productlist.presentation.components.Filte
 import com.example.cursotestingandroid.productlist.presentation.components.HomeTopAppBar
 import com.example.cursotestingandroid.productlist.presentation.components.ProductItem
 
-
 @Composable
 fun ProductListScreen(
     productListViewModel: ProductListViewModel = hiltViewModel(),
     cartViewModel: CartViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
     navigateToProductDetail: (String) -> Unit,
-    navigateToCart: () -> Unit
+    navigateToCart: () -> Unit,
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
     val cartUiState by cartViewModel.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember{ SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
     val filterVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit){
-        productListViewModel.events.collect{ event ->
-            when(event){
+    LaunchedEffect(Unit) {
+        productListViewModel.events.collect { event ->
+            when (event) {
                 is ProductListEvent.ShowMessage -> {
                     snackbarHostState.showSnackbar(event.message)
                 }
@@ -65,14 +64,15 @@ fun ProductListScreen(
         }
     }
 
-    val cartItemCount = remember(cartUiState) {
-        when (val state = cartUiState) {
-            is CartUiState.Success -> {
-                state.cartItems.sumOf { it.cartItem.quantity }
+    val cartItemCount =
+        remember(cartUiState) {
+            when (val state = cartUiState) {
+                is CartUiState.Success -> {
+                    state.cartItems.sumOf { it.cartItem.quantity }
+                }
+                else -> 0
             }
-            else -> 0
         }
-    }
 
     ProductListContent(
         uiState = uiState,
@@ -84,7 +84,7 @@ fun ProductListScreen(
         onSortOptionSelected = { sortOption -> productListViewModel.setSortOption(sortOption) },
         onSettingsSelected = navigateToSettings,
         onProductSelected = { productWithPromotion -> navigateToProductDetail(productWithPromotion.product.id) },
-        onCartSelected = navigateToCart
+        onCartSelected = navigateToCart,
     )
 }
 
@@ -99,7 +99,7 @@ fun ProductListContent(
     onSortOptionSelected: (SortOption) -> Unit,
     onSettingsSelected: () -> Unit,
     onProductSelected: (ProductWithPromotion) -> Unit,
-    onCartSelected: () -> Unit
+    onCartSelected: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -108,86 +108,92 @@ fun ProductListContent(
                 cartItemCount = cartItemCount,
                 onFiltersSelected = onFiltersSelected,
                 onSettingsSelected = onSettingsSelected,
-                onCartSelected = { onCartSelected() }
+                onCartSelected = { onCartSelected() },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
-        when(uiState){
+        when (uiState) {
             is ProductListUiState.Loading -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues = paddingValues),
-                    contentAlignment = Alignment.Center){
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues = paddingValues),
+                    contentAlignment = Alignment.Center,
+                ) {
                     CircularProgressIndicator(modifier = Modifier.testTag(PRODUCT_LIST_LOADING))
                 }
             }
             is ProductListUiState.Error -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues = paddingValues),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues = paddingValues),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "Error: ${uiState.message}",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
             }
-            is ProductListUiState.Success ->  {
+            is ProductListUiState.Success -> {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues = paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues = paddingValues),
                 ) {
                     AnimatedVisibility(
                         visible = filterVisible,
                         enter = expandVertically() + fadeIn(),
-                        exit = shrinkVertically() + fadeOut()
+                        exit = shrinkVertically() + fadeOut(),
                     ) {
                         FiltersMenu(
                             state = uiState,
                             onCategorySelected = onCategorySelected,
-                            onSortedSelected = onSortOptionSelected
+                            onSortedSelected = onSortOptionSelected,
                         )
                     }
                     Text(
-                        text = stringResource(
-                            id = R.string.product_list_screen_products_quantity,
-                            uiState.products.size
-                        ),
+                        text =
+                            stringResource(
+                                id = R.string.product_list_screen_products_quantity,
+                                uiState.products.size,
+                            ),
                         modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 4.dp),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.secondary,
                     )
-                    if(uiState.products.isEmpty()){
+                    if (uiState.products.isEmpty()) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(32.dp),
-                            contentAlignment = Alignment.Center
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .padding(32.dp),
+                            contentAlignment = Alignment.Center,
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(text = "🔍", style = MaterialTheme.typography.displayMedium)
                                 Text(
                                     text = stringResource(R.string.product_list_screen_no_products),
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.tertiary
+                                    color = MaterialTheme.colorScheme.tertiary,
                                 )
                             }
                         }
-                    }else{
+                    } else {
                         LazyColumn(modifier = Modifier.testTag(PRODUCT_LIST_LIST)) {
                             items(uiState.products) { item: ProductWithPromotion ->
                                 ProductItem(
                                     item = item,
-                                    onClick = onProductSelected
+                                    onClick = onProductSelected,
                                 )
                             }
                         }
@@ -210,6 +216,6 @@ fun ProductListContentPreview() {
         onSortOptionSelected = {},
         onSettingsSelected = {},
         onProductSelected = {},
-        onCartSelected = {}
+        onCartSelected = {},
     )
 }

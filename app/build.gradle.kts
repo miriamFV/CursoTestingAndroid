@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -13,11 +15,11 @@ android {
         version = release(36)
     }
 
-    sourceSets{
-        getByName("test"){
+    sourceSets {
+        getByName("test") {
             java.directories.add("src/sharedTest/java")
         }
-        getByName("androidTest"){
+        getByName("androidTest") {
             java.directories.add("src/sharedTest/java")
         }
     }
@@ -37,7 +39,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         debug {
@@ -56,10 +58,30 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+    kover {
+        reports {
+            filters {
+                excludes {
+                    classes(
+                        "*.databinding.*",
+                        "*.BuildConfig",
+                        "*Activity*",
+                        "*Screen*",
+                        "*ComposableSingletons*",
+                    )
+                }
+            }
+            verify {
+                rule {
+                    minBound(20)
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    //Core
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -70,15 +92,15 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
 
-    //Images
+    // Images
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    //Navigation3
+    // Navigation3
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
 
-    //Hilt
+    // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
@@ -86,29 +108,29 @@ dependencies {
     implementation(libs.androidx.material3)
     ksp(libs.hilt.compiler.ksp)
 
-    //Room
+    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler.ksp)
 
-    //Datastore
+    // Datastore
     implementation(libs.datastore.preferences)
 
-    //Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    //ViewModel
+    // ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    //Retrofit
+    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
-    //Serialization
+    // Serialization
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)

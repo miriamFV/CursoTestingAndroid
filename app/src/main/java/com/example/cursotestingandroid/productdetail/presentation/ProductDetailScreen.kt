@@ -44,7 +44,7 @@ import com.example.cursotestingandroid.core.presentation.components.MarketTopApp
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_BUYXPAYY_PROMOTION_LABEL
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_LOADING
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_PERCENT_PROMOTION_LABEL
-import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_PERCENT_PROMOTION_STRIKETHROUGH_PRICE
+import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_PRODUCT_CATEGORY
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_PRODUCT_NAME
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.PRODUCT_DETAIL_STOCK_QUANTITY
@@ -55,9 +55,8 @@ import com.example.cursotestingandroid.productlist.domain.model.ProductPromotion
 fun ProductDetailScreen(
     productId: String,
     onBack: () -> Unit,
-    productDetailViewModel: ProductDetailViewModel = hiltViewModel()
+    productDetailViewModel: ProductDetailViewModel = hiltViewModel(),
 ) {
-
     val uiState by productDetailViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
@@ -67,20 +66,20 @@ fun ProductDetailScreen(
     LaunchedEffect(Unit) {
         productDetailViewModel.event.collect { event ->
             when (event) {
-                ProductDetailEvent.INSUFFICIENT_STOCK -> {
-                    snackbarHostState.showSnackbar(message = "No hay suficiente stock") //TODO: meter en texto localizado: product_detail_screen_insufficient_stock_error
+                ProductDetailEvent.InsufficientStock -> {
+                    snackbarHostState.showSnackbar(message = "No hay suficiente stock") // TODO:texto localizado
                 }
 
-                ProductDetailEvent.NETWORK_ERROR -> {
-                    snackbarHostState.showSnackbar("No hay internet, compruebe su conexión") //TODO: meter en texto localizado
+                ProductDetailEvent.NetworkError -> {
+                    snackbarHostState.showSnackbar("No hay internet, compruebe su conexión") // TODO:texto localizado
                 }
 
-                ProductDetailEvent.UNKNOWN_ERROR -> {
-                    snackbarHostState.showSnackbar("Error inesperado, vuelva a intentarlo") //TODO: meter en texto localizado
+                ProductDetailEvent.UnknownError -> {
+                    snackbarHostState.showSnackbar("Error inesperado, vuelva a intentarlo") // TODO:texto localizado
                 }
 
-                ProductDetailEvent.SUCCESS_ADD_TO_CART -> {
-                    snackbarHostState.showSnackbar("Producto añadido") //TODO: meter en texto localizado
+                ProductDetailEvent.SuccessAddToCart -> {
+                    snackbarHostState.showSnackbar("Producto añadido") // TODO:texto localizado
                 }
             }
         }
@@ -90,9 +89,8 @@ fun ProductDetailScreen(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         onBack = onBack,
-        onAddToCart = { productDetailViewModel.addToCart() }
+        onAddToCart = { productDetailViewModel.addToCart() },
     )
-
 }
 
 @Composable
@@ -100,29 +98,34 @@ fun ProductDetailContent(
     uiState: ProductDetailUiState,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onBack: () -> Unit,
-    onAddToCart: () -> Unit
+    onAddToCart: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             MarketTopAppBar(
-                title = uiState.item?.product?.name.orEmpty(),
-                onBackSelected = { onBack() }
+                title =
+                    uiState.item
+                        ?.product
+                        ?.name
+                        .orEmpty(),
+                onBackSelected = { onBack() },
             )
         },
         bottomBar = {
             AddToCartButton(
                 product = uiState.item?.product,
                 isLoading = uiState.isLoading,
-                addToCart = onAddToCart
+                addToCart = onAddToCart,
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
         ) {
             if (uiState.isLoading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -132,27 +135,29 @@ fun ProductDetailContent(
                 uiState.item?.let {
                     val product = it.product
                     val promotion = it.promotion
-                    val discountPrice = when (promotion) {
-                        is ProductPromotion.BuyXPayY -> null
-                        is ProductPromotion.Percent -> promotion.discountedPrice
-                        null -> null
-                    }
+                    val discountPrice =
+                        when (promotion) {
+                            is ProductPromotion.BuyXPayY -> null
+                            is ProductPromotion.Percent -> promotion.discountedPrice
+                            null -> null
+                        }
 
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                             shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                         ) {
                             Column(
                                 modifier = Modifier.padding(24.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
                                 AsyncImage(
                                     model = product.imageUrl,
@@ -160,39 +165,40 @@ fun ProductDetailContent(
                                     contentScale = ContentScale.Crop,
                                     placeholder = painterResource(R.drawable.ic_launcher_foreground),
                                     error = painterResource(R.drawable.ic_launcher_background),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(16.dp))
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .aspectRatio(1f)
+                                            .clip(RoundedCornerShape(16.dp)),
                                 )
                                 Text(
                                     modifier = Modifier.testTag(PRODUCT_DETAIL_PRODUCT_NAME),
                                     text = product.name,
                                     style = MaterialTheme.typography.headlineMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                                 Surface(
                                     shape = RoundedCornerShape(8.dp),
-                                    color = MaterialTheme.colorScheme.secondaryContainer
+                                    color = MaterialTheme.colorScheme.secondaryContainer,
                                 ) {
                                     Text(
                                         product.category,
-                                        modifier = Modifier
-                                            .padding(
-                                                horizontal = 12.dp,
-                                                vertical = 6.dp
-                                            )
-                                            .testTag(PRODUCT_DETAIL_PRODUCT_CATEGORY),
+                                        modifier =
+                                            Modifier
+                                                .padding(
+                                                    horizontal = 12.dp,
+                                                    vertical = 6.dp,
+                                                ).testTag(PRODUCT_DETAIL_PRODUCT_CATEGORY),
                                         style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     )
                                 }
                                 if (product.description.isNotBlank()) {
                                     Text(
                                         product.description,
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                                 HorizontalDivider()
@@ -200,117 +206,125 @@ fun ProductDetailContent(
                                 if (discountPrice != null) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                                     ) {
                                         Text(
-                                            modifier = Modifier.testTag(
-                                                PRODUCT_DETAIL_PERCENT_PROMOTION_STRIKETHROUGH_PRICE
-                                            ),
+                                            modifier =
+                                                Modifier.testTag(
+                                                    PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE,
+                                                ),
                                             text = product.price.toString(),
                                             style = MaterialTheme.typography.bodyLarge,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            textDecoration = TextDecoration.LineThrough
+                                            textDecoration = TextDecoration.LineThrough,
                                         )
                                         Text(
                                             discountPrice.toString(),
                                             style = MaterialTheme.typography.displaySmall,
                                             color = MaterialTheme.colorScheme.primary,
-                                            fontWeight = FontWeight.Bold
+                                            fontWeight = FontWeight.Bold,
                                         )
                                     }
                                     Surface(
                                         shape = RoundedCornerShape(8.dp),
-                                        color = MaterialTheme.colorScheme.errorContainer
+                                        color = MaterialTheme.colorScheme.errorContainer,
                                     ) {
                                         Text(
-                                            text = stringResource(
-                                                id = R.string.product_detail_screen_percent_off,
-                                                (promotion as ProductPromotion.Percent).percent.toInt()
-                                            ),
-                                            modifier = Modifier
-                                                .padding(
-                                                    horizontal = 12.dp,
-                                                    vertical = 6.dp
-                                                )
-                                                .testTag(PRODUCT_DETAIL_PERCENT_PROMOTION_LABEL),
+                                            text =
+                                                stringResource(
+                                                    id = R.string.product_detail_screen_percent_off,
+                                                    (promotion as ProductPromotion.Percent).percent.toInt(),
+                                                ),
+                                            modifier =
+                                                Modifier
+                                                    .padding(
+                                                        horizontal = 12.dp,
+                                                        vertical = 6.dp,
+                                                    ).testTag(PRODUCT_DETAIL_PERCENT_PROMOTION_LABEL),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onErrorContainer
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
                                         )
                                     }
                                 } else {
                                     Text(
                                         product.price.toString(),
                                         style = MaterialTheme.typography.displaySmall,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
                                     )
                                 }
 
                                 if (promotion is ProductPromotion.BuyXPayY) {
                                     Surface(
                                         shape = RoundedCornerShape(8.dp),
-                                        color = MaterialTheme.colorScheme.errorContainer
+                                        color = MaterialTheme.colorScheme.errorContainer,
                                     ) {
                                         Text(
-                                            text = stringResource(
-                                                id = R.string.product_detail_screen_buy_x_pay_y_promotion,
-                                                promotion.label
-                                            ),
-                                            modifier = Modifier
-                                                .padding(
-                                                    horizontal = 12.dp, vertical = 6.dp
-                                                )
-                                                .testTag(PRODUCT_DETAIL_BUYXPAYY_PROMOTION_LABEL),
+                                            text =
+                                                stringResource(
+                                                    id = R.string.product_detail_screen_buy_x_pay_y_promotion,
+                                                    promotion.label,
+                                                ),
+                                            modifier =
+                                                Modifier
+                                                    .padding(
+                                                        horizontal = 12.dp,
+                                                        vertical = 6.dp,
+                                                    ).testTag(PRODUCT_DETAIL_BUYXPAYY_PROMOTION_LABEL),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onErrorContainer
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
                                         )
                                     }
                                 }
                                 HorizontalDivider()
 
                                 val hasStock = product.stock > 0
-                                val stockContainerColor = if (hasStock) {
-                                    MaterialTheme.colorScheme.primaryContainer
-                                } else {
-                                    MaterialTheme.colorScheme.errorContainer
-                                }
-                                val stockContentColor = if (hasStock) {
-                                    MaterialTheme.colorScheme.onPrimaryContainer
-                                } else {
-                                    MaterialTheme.colorScheme.onErrorContainer
-                                }
+                                val stockContainerColor =
+                                    if (hasStock) {
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    } else {
+                                        MaterialTheme.colorScheme.errorContainer
+                                    }
+                                val stockContentColor =
+                                    if (hasStock) {
+                                        MaterialTheme.colorScheme.onPrimaryContainer
+                                    } else {
+                                        MaterialTheme.colorScheme.onErrorContainer
+                                    }
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
                                         text = stringResource(R.string.product_detail_screen_available_stock),
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                     Surface(
                                         shape = RoundedCornerShape(12.dp),
-                                        color = stockContainerColor
+                                        color = stockContainerColor,
                                     ) {
                                         Text(
-                                            text = if (hasStock) {
-                                                pluralStringResource(
-                                                    id = R.plurals.product_detail_screen_product_units,
-                                                    count = product.stock,
-                                                    product.stock
-                                                )
-                                            } else {
-                                                stringResource(R.string.product_detail_screen_no_stock)
-                                            },
-                                            modifier = Modifier
-                                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                                                .testTag(PRODUCT_DETAIL_STOCK_QUANTITY),
+                                            text =
+                                                if (hasStock) {
+                                                    pluralStringResource(
+                                                        id = R.plurals.product_detail_screen_product_units,
+                                                        count = product.stock,
+                                                        product.stock,
+                                                    )
+                                                } else {
+                                                    stringResource(R.string.product_detail_screen_no_stock)
+                                                },
+                                            modifier =
+                                                Modifier
+                                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                                                    .testTag(PRODUCT_DETAIL_STOCK_QUANTITY),
                                             style = MaterialTheme.typography.bodyLarge,
                                             fontWeight = FontWeight.Bold,
-                                            color = stockContentColor
+                                            color = stockContentColor,
                                         )
                                     }
                                 }

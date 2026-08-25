@@ -30,44 +30,45 @@ fun QuantitySelector(
     onDecreaseSelected: () -> Unit,
     onIncreaseSelected: () -> Unit,
     increaseTestTag: String? = null,
-    decreaseTestTag: String? = null
+    decreaseTestTag: String? = null,
 ) {
     Row(
-        modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
         IconButton(
             onClick = { onDecreaseSelected() },
-            modifier = Modifier
-                .size(36.dp)
-                .then(decreaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
-            enabled = canDecrease
+            modifier =
+                Modifier
+                    .size(36.dp)
+                    .then(decreaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
+            enabled = canDecrease,
         ) {
             Icon(Icons.Default.Remove, contentDescription = null, modifier.size(20.dp))
         }
         Surface(
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primaryContainer,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(32.dp),
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = quantity,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
         IconButton(
             onClick = { onIncreaseSelected() },
-            modifier = Modifier
-                .size(36.dp)
-                .then(increaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
-            enabled = canIncrease
+            modifier =
+                Modifier
+                    .size(36.dp)
+                    .then(increaseTestTag?.let { Modifier.testTag(it) } ?: Modifier),
+            enabled = canIncrease,
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier.size(20.dp))
         }
-
     }
 }

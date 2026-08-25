@@ -7,9 +7,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.cursotestingandroid.productlist.data.local.database.entity.ProductEntity
 import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface ProductDao {
-
     @Query("SELECT * FROM products")
     fun getAllProducts(): Flow<List<ProductEntity>>
 
@@ -26,9 +26,8 @@ interface ProductDao {
     suspend fun clearProducts()
 
     @Transaction
-    suspend fun replaceAll(products: List<ProductEntity>){
+    suspend fun replaceAll(products: List<ProductEntity>) {
         clearProducts()
         insertProducts(products)
     }
-
 }

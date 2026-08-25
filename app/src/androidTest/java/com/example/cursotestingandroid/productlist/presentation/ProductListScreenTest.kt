@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.example.cursotestingandroid.R
 import com.example.cursotestingandroid.core.mothers.ProductMother.bread
 import com.example.cursotestingandroid.core.mothers.ProductMother.coffee
@@ -29,7 +30,6 @@ import org.junit.Rule
 import org.junit.Test
 
 class ProductListScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
@@ -42,7 +42,7 @@ class ProductListScreenTest {
         onSortOptionSelected: (SortOption) -> Unit = {},
         onSettingsSelected: () -> Unit = {},
         onProductSelected: (ProductWithPromotion) -> Unit = {},
-        onCartSelected: () -> Unit = {}
+        onCartSelected: () -> Unit = {},
     ) {
         composeRule.setContent {
             ProductListContent(
@@ -54,7 +54,7 @@ class ProductListScreenTest {
                 onCartSelected = onCartSelected,
                 onCategorySelected = onCategorySelected,
                 onSortOptionSelected = onSortOptionSelected,
-                onProductSelected = onProductSelected
+                onProductSelected = onProductSelected,
             )
         }
     }
@@ -77,9 +77,9 @@ class ProductListScreenTest {
         composeRule.onNodeWithText("3 productos").assertIsDisplayed()
         composeRule.onNodeWithTag(FILTER_VIEW).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(productListItem(coffee().id)).assertIsDisplayed()
-        composeRule.onNodeWithTag(productListItem(milk().id)).assertIsDisplayed()
-        composeRule.onNodeWithTag(productListItem(bread().id)).assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(coffee().id)).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(milk().id)).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(bread().id)).performScrollTo().assertIsDisplayed()
 
 //        composeRule.onNodeWithTag(PRODUCT_LIST_LIST).performScrollToIndex(6) //Goes to the exact position
 //        composeRule.onNodeWithTag(productListItem("1234")).assertIsDisplayed()
@@ -136,7 +136,7 @@ class ProductListScreenTest {
         var emitted: Boolean? = null
         createProductListScreen(
             filterVisible = true,
-            onFiltersSelected = { emitted = it}
+            onFiltersSelected = { emitted = it },
         )
         composeRule.onNodeWithTag(TOP_APP_BAR_FILTERS_BUTTON).performClick()
         assertEquals(false, emitted)
@@ -147,27 +147,27 @@ class ProductListScreenTest {
         var emitted: Boolean? = null
         createProductListScreen(
             filterVisible = false,
-            onFiltersSelected = { emitted = it}
+            onFiltersSelected = { emitted = it },
         )
         composeRule.onNodeWithTag(TOP_APP_BAR_FILTERS_BUTTON).performClick()
         assertEquals(true, emitted)
     }
 
     @Test
-    fun givenProductListRendered_whenSettingsIconClicked_thenEmitCallback(){
+    fun givenProductListRendered_whenSettingsIconClicked_thenEmitCallback() {
         var settingClicked = false
         createProductListScreen(
-            onSettingsSelected = { settingClicked = true}
+            onSettingsSelected = { settingClicked = true },
         )
         composeRule.onNodeWithTag(TOP_APP_BAR_SETTINGS_BUTTON).performClick()
         assertEquals(true, settingClicked)
     }
 
     @Test
-    fun givenProductListRendered_whenCartIconClicked_thenEmitCallback(){
+    fun givenProductListRendered_whenCartIconClicked_thenEmitCallback() {
         var cartClicked = false
         createProductListScreen(
-            onCartSelected = { cartClicked = true}
+            onCartSelected = { cartClicked = true },
         )
         composeRule.onNodeWithTag(TOP_APP_BAR_CART_BUTTON).performClick()
         assertEquals(true, cartClicked)
@@ -177,7 +177,8 @@ class ProductListScreenTest {
     fun givenNoSortOptionSelected_whenRendered_thenNoneChipIsSelected() {
         createProductListScreen(uiState = ProductListUiStateMother.success(sortOption = SortOption.NONE))
         composeRule.onNodeWithTag(productListSortOption(SortOption.PRICE_ASC.name)).assertIsNotSelected()
-        composeRule.onNodeWithTag(productListSortOption(SortOption.PRICE_DESC.name))
+        composeRule
+            .onNodeWithTag(productListSortOption(SortOption.PRICE_DESC.name))
             .assertIsNotSelected()
         composeRule.onNodeWithTag(productListSortOption(SortOption.DISCOUNT.name)).assertIsNotSelected()
     }
@@ -191,25 +192,25 @@ class ProductListScreenTest {
     }
 
     @Test
-    fun givenProductListRendered_whenSortPriceAscClicked_thenEmitPriceAscSortOption(){
+    fun givenProductListRendered_whenSortPriceAscClicked_thenEmitPriceAscSortOption() {
         var selectedSort: SortOption? = null
-        createProductListScreen(onSortOptionSelected = {newSort -> selectedSort = newSort})
+        createProductListScreen(onSortOptionSelected = { newSort -> selectedSort = newSort })
         composeRule.onNodeWithTag(productListSortOption(SortOption.PRICE_ASC.name)).performClick()
         assertEquals(SortOption.PRICE_ASC, selectedSort)
     }
 
     @Test
-    fun givenProductListRendered_whenSortPriceDescClicked_thenEmitPriceDescSortOption(){
+    fun givenProductListRendered_whenSortPriceDescClicked_thenEmitPriceDescSortOption() {
         var selectedSort: SortOption? = null
-        createProductListScreen(onSortOptionSelected = {newSort -> selectedSort = newSort})
+        createProductListScreen(onSortOptionSelected = { newSort -> selectedSort = newSort })
         composeRule.onNodeWithTag(productListSortOption(SortOption.PRICE_DESC.name)).performClick()
         assertEquals(SortOption.PRICE_DESC, selectedSort)
     }
 
     @Test
-    fun givenProductListRendered_whenSortDiscountClicked_thenEmitDiscountSortOption(){
+    fun givenProductListRendered_whenSortDiscountClicked_thenEmitDiscountSortOption() {
         var selectedSort: SortOption? = null
-        createProductListScreen(onSortOptionSelected = {newSort -> selectedSort = newSort})
+        createProductListScreen(onSortOptionSelected = { newSort -> selectedSort = newSort })
         composeRule.onNodeWithTag(productListSortOption(SortOption.DISCOUNT.name)).performClick()
         assertEquals(SortOption.DISCOUNT, selectedSort)
     }

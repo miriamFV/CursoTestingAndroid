@@ -26,8 +26,7 @@ import kotlin.test.assertFailsWith
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class OfflineFirstIntegrationTest {
-
-    companion object{
+    companion object {
         const val DEFAULT_PRODUCT_ASSET = "product_list_default.json"
         const val UPDATED_PRODUCT_ASSET = "product_list_updated.json"
         const val DEFAULT_PRODUCT_SIZE = 3
@@ -35,7 +34,7 @@ class OfflineFirstIntegrationTest {
     }
 
     @get:Rule(order = 0)
-    val mockWebServerRule= MockWebServerRule()
+    val mockWebServerRule = MockWebServerRule()
 
     @get:Rule(order = 1)
     val hiltAndroidRule = HiltAndroidRule(this)
@@ -47,10 +46,11 @@ class OfflineFirstIntegrationTest {
     lateinit var productRepository: ProductRepository
 
     @Before
-    fun setUp() = runTest {
-        hiltAndroidRule.inject()
-        database.clearAllTables()
-    }
+    fun setUp() =
+        runTest {
+            hiltAndroidRule.inject()
+            database.clearAllTables()
+        }
 
     @After
     fun tearDown() {
@@ -58,68 +58,75 @@ class OfflineFirstIntegrationTest {
     }
 
     @Test
-    fun givenSuccessfullRefresh_whenGetProducts_thenRoomContainsRemoteProducts() = runTest {
-        serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
-        productRepository.refreshProduct()
-        val cachedProducts = productRepository.getProducts().first{ products ->
-            products.size == DEFAULT_PRODUCT_SIZE //Wait until out cachedProduct size would be 3
+    fun givenSuccessfullRefresh_whenGetProducts_thenRoomContainsRemoteProducts() =
+        runTest {
+            serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
+            productRepository.refreshProduct()
+            val cachedProducts =
+                productRepository.getProducts().first { products ->
+                    products.size == DEFAULT_PRODUCT_SIZE // Wait until out cachedProduct size would be 3
+                }
+            assertEquals(DEFAULT_PRODUCT_SIZE, cachedProducts.size)
         }
-        assertEquals(DEFAULT_PRODUCT_SIZE, cachedProducts.size)
-    }
 
     @Test
-    fun givenEmptyCacheAndFailedRefresh_whenGetProducts_thenEmitsEmptyList() = runTest {
-        serveProductsError()
+    fun givenEmptyCacheAndFailedRefresh_whenGetProducts_thenEmitsEmptyList() =
+        runTest {
+            serveProductsError()
 //        val result = runCatching {  productRepository.refreshProduct()}
 //        assertTrue(result.isFailure)
 
-        assertFailsWith<AppError.NetworkError>{productRepository.refreshProduct()}
-        val products = productRepository.getProducts().first { it.isEmpty() }
-        assertTrue(products.isEmpty())
-    }
+            assertFailsWith<AppError.NetworkError> { productRepository.refreshProduct() }
+            val products = productRepository.getProducts().first { it.isEmpty() }
+            assertTrue(products.isEmpty())
+        }
 
     @Test
-    fun givenCachedProductsAndFailedRefresh_whenGetProducts_thenReturnsPreviousCache() = runTest {
-        serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
-        productRepository.refreshProduct()
-        productRepository.getProducts().first{ products ->
-            products.size == DEFAULT_PRODUCT_SIZE
+    fun givenCachedProductsAndFailedRefresh_whenGetProducts_thenReturnsPreviousCache() =
+        runTest {
+            serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
+            productRepository.refreshProduct()
+            productRepository.getProducts().first { products ->
+                products.size == DEFAULT_PRODUCT_SIZE
+            }
+            serveProductsError()
+            assertFailsWith<AppError.NetworkError> { productRepository.refreshProduct() }
+            val cachedProducts =
+                productRepository.getProducts().first { products ->
+                    products.size == DEFAULT_PRODUCT_SIZE
+                }
+            assertEquals(DEFAULT_PRODUCT_SIZE, cachedProducts.size)
         }
-        serveProductsError()
-        assertFailsWith<AppError.NetworkError>{productRepository.refreshProduct()}
-        val cachedProducts = productRepository.getProducts().first{ products ->
-            products.size == DEFAULT_PRODUCT_SIZE
-        }
-        assertEquals(DEFAULT_PRODUCT_SIZE, cachedProducts.size)
-    }
 
     @Test
-    fun givenCachedProducts_whenRefreshWhenNewPayLoad_thenContainsOnlyLatestProducts() = runTest {
-        serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
-        productRepository.refreshProduct()
-        productRepository.getProducts().first{ products ->
-            products.size == DEFAULT_PRODUCT_SIZE
-        }
+    fun givenCachedProducts_whenRefreshWhenNewPayLoad_thenContainsOnlyLatestProducts() =
+        runTest {
+            serveProductsFromAsset(DEFAULT_PRODUCT_ASSET)
+            productRepository.refreshProduct()
+            productRepository.getProducts().first { products ->
+                products.size == DEFAULT_PRODUCT_SIZE
+            }
 
-        serveProductsFromAsset(UPDATED_PRODUCT_ASSET)
-        productRepository.refreshProduct()
-        val updatedProducts = productRepository.getProducts().first { products ->
-            products.size == UPDATED_PRODUCT_SIZE
-        }
+            serveProductsFromAsset(UPDATED_PRODUCT_ASSET)
+            productRepository.refreshProduct()
+            val updatedProducts =
+                productRepository.getProducts().first { products ->
+                    products.size == UPDATED_PRODUCT_SIZE
+                }
 
-        assertEquals(UPDATED_PRODUCT_SIZE, updatedProducts.size)
-        assertEquals("updated-p1", updatedProducts.first().id)
-        assertEquals("Pan integral", updatedProducts.first().name)
-    }
+            assertEquals(UPDATED_PRODUCT_SIZE, updatedProducts.size)
+            assertEquals("updated-p1", updatedProducts.first().id)
+            assertEquals("Pan integral", updatedProducts.first().name)
+        }
 
     private fun serveProductsFromAsset(assetName: String) {
-        mockWebServerRule.server.dispatcher = MarketApiDispatcher(
-            productJson = assetName.asAsset()
-        )
+        mockWebServerRule.server.dispatcher =
+            MarketApiDispatcher(
+                productJson = assetName.asAsset(),
+            )
     }
 
-    private fun serveProductsError(){
+    private fun serveProductsError() {
         mockWebServerRule.server.dispatcher = ProductErrorDispatcher()
     }
-
 }

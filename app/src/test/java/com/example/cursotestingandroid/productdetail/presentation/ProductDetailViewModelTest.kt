@@ -22,7 +22,6 @@ import org.junit.Rule
 import org.junit.Test
 
 class ProductDetailViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
@@ -30,29 +29,37 @@ class ProductDetailViewModelTest {
         fakeProductRepository: ProductRepository = FakeProductRepository(),
         fakePromotionRepository: PromotionRepository = FakePromotionRepository(),
         fakeCartRepository: CartRepository = FakeCartRepository(),
-        fakeClock: FakeSystemClock = FakeSystemClock()
+        fakeClock: FakeSystemClock = FakeSystemClock(),
     ): ProductDetailViewModel {
-
-        val getProductDetailWithPromotionUseCase = GetProductDetailWithPromotionUseCase(
-            fakeProductRepository, fakePromotionRepository,
-            GetPromotionForProduct(), fakeClock
-        )
-        val addToCartUseCase = AddToCartUseCase(
-            fakeCartRepository, fakeProductRepository
-        )
+        val getProductDetailWithPromotionUseCase =
+            GetProductDetailWithPromotionUseCase(
+                fakeProductRepository,
+                fakePromotionRepository,
+                GetPromotionForProduct(),
+                fakeClock,
+            )
+        val addToCartUseCase =
+            AddToCartUseCase(
+                fakeCartRepository,
+                fakeProductRepository,
+            )
 
         return ProductDetailViewModel(
             getProductDetailWithPromotionUseCase,
-            addToCartUseCase
+            addToCartUseCase,
         )
     }
 
     @Test
     fun givenValidProductId_whenLoadProduct_thenEmitsItem() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val productId = "productId"
-            val product = product { withId(productId); withName("leche") }
+            val product =
+                product {
+                    withId(productId)
+                    withName("leche")
+                }
             val fakeProductRepository =
                 FakeProductRepository().apply { setProducts(listOf(product)) }
 
@@ -60,9 +67,9 @@ class ProductDetailViewModelTest {
 
             viewModel.uiState.test {
                 awaitItem()
-                //When
+                // When
                 viewModel.loadProduct(productId)
-                //Then
+                // Then
                 val state = awaitItem()
                 assertFalse(state.isLoading)
                 assertNotNull(state.item)
@@ -76,9 +83,13 @@ class ProductDetailViewModelTest {
     @Test
     fun givenMissingProductId_whenLoadProduct_thenEndsWithItemNull() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val productId = "productId"
-            val product = product { withId(productId); withName("leche") }
+            val product =
+                product {
+                    withId(productId)
+                    withName("leche")
+                }
             val fakeProductRepository =
                 FakeProductRepository().apply { setProducts(listOf(product)) }
 
@@ -86,10 +97,10 @@ class ProductDetailViewModelTest {
 
             viewModel.uiState.test {
                 awaitItem()
-                //When
+                // When
                 val missingProductId = "pId"
                 viewModel.loadProduct(missingProductId)
-                //Then
+                // Then
                 val state = awaitItem()
                 assertFalse(state.isLoading)
                 assertNull(state.item)
@@ -98,13 +109,17 @@ class ProductDetailViewModelTest {
             }
         }
 
-
     @Test
     fun givenLoadProduct_whenAddToCartSucceeds_thenEmitSuccessEvent() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val productId = "productId"
-            val product = product { withId(productId); withName("leche"); withStock(10) }
+            val product =
+                product {
+                    withId(productId)
+                    withName("leche")
+                    withStock(10)
+                }
             val fakeProductRepository =
                 FakeProductRepository().apply { setProducts(listOf(product)) }
 
@@ -113,12 +128,12 @@ class ProductDetailViewModelTest {
             viewModel.loadProduct(productId)
 
             viewModel.event.test {
-                //When
+                // When
                 viewModel.addToCart()
 
-                //Then
+                // Then
                 val result = awaitItem()
-                assertEquals(ProductDetailEvent.SUCCESS_ADD_TO_CART, result)
+                assertEquals(ProductDetailEvent.SuccessAddToCart, result)
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -127,9 +142,14 @@ class ProductDetailViewModelTest {
     @Test
     fun givenLoadedProductWithoutStock_whenAddToCart_thenEmitsInsufficientStockError() =
         runTest(mainDispatcherRule.scheduler) {
-            //Given
+            // Given
             val productId = "productId"
-            val product = product { withId(productId); withName("leche"); withStock(0) }
+            val product =
+                product {
+                    withId(productId)
+                    withName("leche")
+                    withStock(0)
+                }
             val fakeProductRepository =
                 FakeProductRepository().apply { setProducts(listOf(product)) }
 
@@ -138,15 +158,14 @@ class ProductDetailViewModelTest {
             viewModel.loadProduct(productId)
 
             viewModel.event.test {
-                //When
+                // When
                 viewModel.addToCart()
 
-                //Then
+                // Then
                 val result = awaitItem()
-                assertEquals(ProductDetailEvent.INSUFFICIENT_STOCK, result)
+                assertEquals(ProductDetailEvent.InsufficientStock, result)
 
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 }
