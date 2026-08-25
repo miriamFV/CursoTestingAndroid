@@ -129,7 +129,9 @@ class ProductDetailScreenTest {
                         ),
                 ),
         )
-        composeRule.onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE)
+            .performScrollTo()
+            .assertIsDisplayed()
 
         val expectedText =
             composeRule.activity.getString(
