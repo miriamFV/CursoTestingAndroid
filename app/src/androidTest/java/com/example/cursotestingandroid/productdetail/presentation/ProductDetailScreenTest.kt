@@ -129,7 +129,8 @@ class ProductDetailScreenTest {
                         ),
                 ),
         )
-        composeRule.onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE)
+        composeRule
+            .onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE)
             .performScrollTo()
             .assertIsDisplayed()
 
