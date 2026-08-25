@@ -9,7 +9,7 @@ import com.example.cursotestingandroid.checkout.presentation.validate
 
 class CheckoutUiStateBuilder {
     private var summary: CartSummary = cartSummary { }
-    private var form: CheckoutForm = checkoutForm { }
+    private var form: CheckoutForm = CheckoutForm()
     private var errors: CheckoutFormErrors? = null
     private var isCartEmpty: Boolean = false
     private var isSubmitting: Boolean = false

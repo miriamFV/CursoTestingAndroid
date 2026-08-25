@@ -8,7 +8,6 @@ import com.example.cursotestingandroid.checkout.domain.repository.OrderRepositor
 import com.example.cursotestingandroid.checkout.domain.usecase.PlaceOrderUseCase
 import com.example.cursotestingandroid.core.MainDispatcherRule
 import com.example.cursotestingandroid.core.builders.cartItem
-import com.example.cursotestingandroid.core.builders.checkoutForm
 import com.example.cursotestingandroid.core.builders.product
 import com.example.cursotestingandroid.core.domain.util.Clock
 import com.example.cursotestingandroid.core.fakes.FakeCartRepository
@@ -97,12 +96,8 @@ class CheckoutViewModelTest {
                     fakeCartRepository = fakeCartRepository,
                     fakeProductRepository = fakeProductRepository,
                 )
-            val validForm =
-                checkoutForm {
-                    withName("Miriam")
-                    withAddress("Kotlin")
-                    withEmail("apruebame@porfi.com")
-                }
+
+            val validForm = CheckoutForm(name = "Miriam", address = "Kotlin", email = "apruebame@porfa.com")
 
             // WHEN
             viewModel.onNameChanged(validForm.name)
@@ -164,12 +159,8 @@ class CheckoutViewModelTest {
                     fakeCartRepository = fakeCartRepository,
                     fakeProductRepository = fakeProductRepository,
                 )
-            val validForm =
-                checkoutForm {
-                    withName("Miriam")
-                    withAddress("Kotlin")
-                    withEmail("apruebame@porfi.com")
-                }
+
+            val validForm = CheckoutForm(name = "Miriam", address = "Kotlin", email = "apruebame@porfa.com")
 
             viewModel.onNameChanged(validForm.name)
             viewModel.onAddressChanged(validForm.address)

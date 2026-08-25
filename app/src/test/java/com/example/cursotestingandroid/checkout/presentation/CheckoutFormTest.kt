@@ -1,6 +1,5 @@
 package com.example.cursotestingandroid.checkout.presentation
 
-import com.example.cursotestingandroid.core.builders.checkoutForm
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -16,7 +15,7 @@ class CheckoutFormTest {
     fun `given blank name when validate then nameError is REQUIRED`() {
         // GIVEN
         val blankName = " "
-        val checkoutForm = checkoutForm { withName(blankName) }
+        val checkoutForm = CheckoutForm(name = blankName)
         // WHEN
         val nameError = checkoutForm.validate().nameError
         // THEN
@@ -27,7 +26,7 @@ class CheckoutFormTest {
     fun `given blank address when validate then addressError is REQUIRED`() {
         // GIVEN
         val blankAddress = " "
-        val checkoutForm = checkoutForm { withAddress(blankAddress) }
+        val checkoutForm = CheckoutForm(address = blankAddress)
         // WHEN
         val addressError = checkoutForm.validate().addressError
         // THEN
@@ -38,7 +37,7 @@ class CheckoutFormTest {
     fun `given blank email when validate then emailError is REQUIRED`() {
         // GIVEN
         val blankEmail = " "
-        val checkoutForm = checkoutForm { withEmail(blankEmail) }
+        val checkoutForm = CheckoutForm(email = blankEmail)
         // WHEN
         val emailError = checkoutForm.validate().emailError
         // THEN
@@ -49,7 +48,7 @@ class CheckoutFormTest {
     fun `given malformed email when validate then emailError is INVALID_EMAIL`() {
         // GIVEN
         val malformedEmail = "apruebame@porficom"
-        val checkoutForm = checkoutForm { withEmail(malformedEmail) }
+        val checkoutForm = CheckoutForm(email = malformedEmail)
         // WHEN
         val emailError = checkoutForm.validate().emailError
         // THEN
@@ -59,12 +58,7 @@ class CheckoutFormTest {
     @Test
     fun `given all fields valid when validate then errors isValid is true`() {
         // GIVEN
-        val correctForm =
-            checkoutForm {
-                withName("Miriam")
-                withAddress("Kotlin")
-                withEmail("apruebame@porfa.com")
-            }
+        val correctForm = CheckoutForm(name = "Miriam", address = "Kotlin", email = "apruebame@porfa.com")
         // WHEN
         val isValidForm = correctForm.validate().isValid
         // THEN

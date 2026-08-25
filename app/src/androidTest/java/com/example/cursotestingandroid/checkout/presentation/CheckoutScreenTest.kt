@@ -12,7 +12,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import com.example.cursotestingandroid.core.builders.checkoutErrorState
-import com.example.cursotestingandroid.core.builders.checkoutForm
 import com.example.cursotestingandroid.core.builders.checkoutIdleState
 import com.example.cursotestingandroid.core.builders.checkoutSuccessState
 import com.example.cursotestingandroid.core.presentation.testing.UiTestTag.CHECKOUT_CONFIRM_BUTTON
@@ -79,12 +78,8 @@ class CheckoutScreenTest {
     @Test
     fun givenIdleStateWithValidForm_whenRendered_thenConfirmButtonEnabled() {
         // GIVEN
-        val validForm =
-            checkoutForm {
-                withName("Miriam")
-                withAddress("Calle kotlin")
-                withEmail("apruebame@porfa.com")
-            }
+        val validForm = CheckoutForm(name = "Miriam", address = "Kotlin", email = "apruebame@porfa.com")
+
         val validFormIdleState = checkoutIdleState { withForm(validForm) }
         // WHEN
         createCheckoutScreen(uiState = validFormIdleState)
@@ -96,12 +91,8 @@ class CheckoutScreenTest {
     fun givenIdleState_whenTypingInvalidEmail_thenConfirmButtonDisabled() {
         // GIVEN
         val validEmail = "apruebame@porfa.com"
-        val validForm =
-            checkoutForm {
-                withName("Miriam")
-                withAddress("Calle kotlin")
-                withEmail(validEmail)
-            }
+        val validForm = CheckoutForm(name = "Miriam", address = "Kotlin", email = validEmail)
+
         var uiState by mutableStateOf(checkoutIdleState { withForm(validForm) })
 
         composeRule.setContent {
