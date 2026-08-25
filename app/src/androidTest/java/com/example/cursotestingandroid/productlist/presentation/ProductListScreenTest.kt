@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.example.cursotestingandroid.R
 import com.example.cursotestingandroid.core.mothers.ProductMother.bread
 import com.example.cursotestingandroid.core.mothers.ProductMother.coffee
@@ -76,9 +77,9 @@ class ProductListScreenTest {
         composeRule.onNodeWithText("3 productos").assertIsDisplayed()
         composeRule.onNodeWithTag(FILTER_VIEW).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(productListItem(coffee().id)).assertIsDisplayed()
-        composeRule.onNodeWithTag(productListItem(milk().id)).assertIsDisplayed()
-        composeRule.onNodeWithTag(productListItem(bread().id)).assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(coffee().id)).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(milk().id)).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag(productListItem(bread().id)).performScrollTo().assertIsDisplayed()
 
 //        composeRule.onNodeWithTag(PRODUCT_LIST_LIST).performScrollToIndex(6) //Goes to the exact position
 //        composeRule.onNodeWithTag(productListItem("1234")).assertIsDisplayed()

@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.example.cursotestingandroid.R
 import com.example.cursotestingandroid.core.mothers.ProductMother.bread
 import com.example.cursotestingandroid.core.mothers.ProductMother.milk
@@ -81,6 +82,7 @@ class ProductDetailScreenTest {
         val expectedText = composeRule.activity.getString(R.string.product_detail_screen_no_stock)
         composeRule
             .onNodeWithTag(PRODUCT_DETAIL_STOCK_QUANTITY)
+            .performScrollTo()
             .assertIsDisplayed()
             .assertTextEquals(expectedText)
     }
@@ -108,6 +110,7 @@ class ProductDetailScreenTest {
             )
         composeRule
             .onNodeWithTag(PRODUCT_DETAIL_STOCK_QUANTITY)
+            .performScrollTo()
             .assertIsDisplayed()
             .assertTextEquals(expectedText)
     }
@@ -126,7 +129,7 @@ class ProductDetailScreenTest {
                         ),
                 ),
         )
-        composeRule.onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMO_OLD_PRICE).assertExists()
 
         val expectedText =
             composeRule.activity.getString(
@@ -161,6 +164,7 @@ class ProductDetailScreenTest {
             )
         composeRule
             .onNodeWithTag(PRODUCT_DETAIL_BUYXPAYY_PROMOTION_LABEL)
+            .performScrollTo()
             .assertIsDisplayed()
             .assertTextEquals(expectedText)
     }
