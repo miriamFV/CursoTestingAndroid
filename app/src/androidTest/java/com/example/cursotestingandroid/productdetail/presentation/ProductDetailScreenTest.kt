@@ -141,6 +141,7 @@ class ProductDetailScreenTest {
             )
         composeRule
             .onNodeWithTag(PRODUCT_DETAIL_PERCENT_PROMOTION_LABEL)
+            .performScrollTo()
             .assertIsDisplayed()
             .assertTextEquals(expectedText)
     }
